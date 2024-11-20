@@ -1,0 +1,19 @@
+### Get test
+GET http://localhost:3000/api/procore/
+
+### Get code
+GET http://localhost:3000/api/procore/code
+
+### Get delivery logs in project
+GET http://localhost:3000/api/procore/deliveries
+
+### Create delivery log in project
+POST http://localhost:3000/api/procore/deliveries
+Content-Type: application/json
+
+{
+    "delivery_log": {
+        "time_hour": 0,
+        "time_minute": 0
+    }
+}
