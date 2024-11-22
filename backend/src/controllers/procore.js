@@ -1,21 +1,20 @@
 import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } from '../util/config'
-import { Router, Response } from 'express'
+import { Router } from 'express'
 import axios from 'axios'
 const router = Router()
 
-let token: string = ''
+let token = ''
 
-router.get('/', (_request, response: Response) => {
+router.get('/', (_request, response) => {
   response.status(200).send('success')
 })
 
-router.get('/code', (_request, response: Response) => {
+router.get('/code', (_request, response) => {
   const url = `https://sandbox.procore.com/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}`
   response.redirect(url)
 })
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-router.get('/callback', async (request, response): Promise<any> => {
+router.get('/callback', async (request, response) => {
   const { code } = request.query
 
   if (!code) {
@@ -32,11 +31,10 @@ router.get('/callback', async (request, response): Promise<any> => {
         client_secret: CLIENT_SECRET,
         redirect_uri: REDIRECT_URI,
       },
-      { headers: { 'Content-Type': 'application/json' } }
+      { headers: { 'Content-Type': 'application/json' } },
     )
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const accessToken = tokenResponse.data.access_token as string
+    const accessToken = tokenResponse.data.access_token
     token = accessToken
     response.status(200).json(tokenResponse.data)
   } catch (error) {
@@ -45,8 +43,7 @@ router.get('/callback', async (request, response): Promise<any> => {
   }
 })
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-router.get('/deliveries', async (_request, response): Promise<any> => {
+router.get('/deliveries', async (_request, response) => {
   const projectId = 126842
   const url = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/delivery_logs`
 
@@ -56,19 +53,17 @@ router.get('/deliveries', async (_request, response): Promise<any> => {
     })
 
     response.status(200).json(deliveriesResponse.data)
-  } catch (error: unknown) {
+  } catch (error) {
     console.log('Error accessing deliveries using authorization token', error)
     response.status(500).send('Failed to fetch deliveries')
   }
 })
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-router.post('/deliveries', async (request, response): Promise<any> => {
+router.post('/deliveries', async (request, response) => {
   const projectId = 126842
   const url = `https://sandbox.procore.com/rest/v1.0/projects/${projectId}/delivery_logs`
 
   const companyId = 4268200
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const deliveryLogData = {
     ...request.body,
   }
@@ -82,7 +77,8 @@ router.post('/deliveries', async (request, response): Promise<any> => {
     })
 
     response.status(200).json(delivery.data)
-  } catch (error: unknown) {
+  } catch (error) {
+    // eslint-disable-next-line no-console
     console.log('Error accessing deliveries using authorization token', error)
     response.status(500).send('Failed to fetch deliveries')
   }
