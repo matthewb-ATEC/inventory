@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for advancetecllc-inventory on 2024-11-22T15:57:35-05:00
+# fly.toml app configuration file generated for advancetecllc-inventory on 2024-11-22T16:11:14-05:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -9,7 +9,7 @@ primary_region = 'iad'
 [build]
 
 [env]
-  PORT = '3000'
+  PORT="3000"
 
 [http_service]
   internal_port = 3000
