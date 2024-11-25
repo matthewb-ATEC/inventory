@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import consumablesService from '../services/consumablesService'
-import { ConsumableType } from '../types'
-import Container from './Container'
+import consumablesService from '../../services/consumablesService'
+import { ConsumableType } from '../../types'
+import Container from '../Container'
 
 const CatalogForm = () => {
   const [name, setName] = useState<string>('')
