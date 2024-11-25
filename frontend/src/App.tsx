@@ -4,6 +4,7 @@ import Layout from './components/Layout'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Shipments from './components/Shipments'
 import Stock from './components/Stock'
+import Catalog from './components/Catalog'
 
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([
@@ -14,6 +15,7 @@ const router = createBrowserRouter([
     children: [
       { path: '/', element: <Home /> },
       { path: '/shipments', element: <Shipments /> },
+      { path: '/catalog', element: <Catalog /> },
       { path: '/stock', element: <Stock /> },
     ],
   },
