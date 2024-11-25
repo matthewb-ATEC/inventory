@@ -9,6 +9,11 @@ const Nav = () => {
         alt="AdvanceTEC"
       />
       <div className="flex space-x-4">
+        <Link to={`/shipments`}>Shipments</Link>
+        <Link to={`/purchases`}>Purchases</Link>
+        <Link to={`/catalog`}>Catalog</Link>
+        <Link to={`/stock`}>Stock</Link>
+        <Link to={`/requests`}>Requests</Link>
         <Link to={`/`}>Home</Link>
       </div>
     </div>
