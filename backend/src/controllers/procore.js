@@ -1,6 +1,7 @@
 import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } from '../util/config'
 import { Router } from 'express'
 import axios from 'axios'
+import { error } from 'logger.js'
 const router = Router()
 
 let token = ''
@@ -38,7 +39,7 @@ router.get('/callback', async (request, response) => {
     token = accessToken
     response.status(200).json(tokenResponse.data)
   } catch (error) {
-    console.error('Error exchanging code for token:', error)
+    error('Error exchanging code for token:', error)
     response.status(500).send('Failed to fetch access token')
   }
 })
@@ -54,7 +55,7 @@ router.get('/deliveries', async (_request, response) => {
 
     response.status(200).json(deliveriesResponse.data)
   } catch (error) {
-    console.log('Error accessing deliveries using authorization token', error)
+    error('Error accessing deliveries using authorization token', error)
     response.status(500).send('Failed to fetch deliveries')
   }
 })
@@ -78,8 +79,7 @@ router.post('/deliveries', async (request, response) => {
 
     response.status(200).json(delivery.data)
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log('Error accessing deliveries using authorization token', error)
+    error('Error accessing deliveries using authorization token', error)
     response.status(500).send('Failed to fetch deliveries')
   }
 })

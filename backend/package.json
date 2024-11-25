@@ -22,7 +22,10 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
-    "express-async-errors": "^3.1.1"
+    "express-async-errors": "^3.1.1",
+    "pg": "^8.13.1",
+    "sequelize": "^6.37.5",
+    "umzug": "^3.8.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",

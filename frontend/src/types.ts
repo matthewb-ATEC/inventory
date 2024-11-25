@@ -17,3 +17,11 @@ export interface ProductivityType {
 export interface AuthenticationType {
   authentication?: string
 }
+
+export interface ConsumableType {
+  id: string
+  name: string
+  quantity: number
+  createdAt: Date
+  updatedAt: Date
+}
