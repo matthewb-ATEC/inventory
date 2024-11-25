@@ -1,7 +1,9 @@
+import Body from './Body'
+
 const Shipments = () => {
   return (
-    <div className="bg-gray-50 flex flex-grow items-center justify-center">
-      <form className="flex flex-col space-y-4 bg-white p-8 rounded-md shadow-md m-6 md:m-16">
+    <Body>
+      <form className="flex flex-col space-y-4 bg-white p-8 rounded-md shadow-md">
         <div className="flex flex-col space-y-2">
           <label className="text-xl font-semibold" htmlFor="shipments">
             Shipments
@@ -57,7 +59,7 @@ const Shipments = () => {
           <select className="border-b-2 border-gray-300 p-2"></select>
         </div>
       </form>
-    </div>
+    </Body>
   )
 }
 

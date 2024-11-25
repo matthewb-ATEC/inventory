@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import consumablesService from '../services/consumablesService'
 import { ConsumableType } from '../types'
+import Body from './Body'
+import Container from './Container'
+import Loading from './Loading'
 
 const Stock = () => {
   const [consumables, setConsumables] = useState<ConsumableType[]>([])
@@ -17,35 +20,33 @@ const Stock = () => {
     void getConsumables()
   }, [])
 
-  if (!consumables.length) return <>loading...</>
-
-  console.log(consumables)
+  if (!consumables.length) return <Loading />
 
   return (
-    <div className="bg-gray-50 flex flex-grow items-center justify-center">
-      <div className="flex flex-col space-y-4 bg-white p-8 rounded-md shadow-md m-6 md:m-16">
-        <div className="flex flex-col space-y-2">
-          <label className="text-xl font-semibold" htmlFor="Stock">
-            Stock
-          </label>
-          <div className="text-gray-500">
-            View to quantity, location and other deatils about the warehouse
-            stock
-          </div>
-        </div>
+    <Body>
+      <Container>
+        <label className="text-xl font-semibold" htmlFor="Stock">
+          Consumables
+        </label>
 
-        <div className="flex flex-col space-y-2">
-          <label className="text-xl font-semibold" htmlFor="Stock">
-            Consumbales
-          </label>
-          <div>
-            {consumables.map((consumable, index) => (
-              <div key={index}>{consumable.name}</div>
+        <table className="bg-gray-50">
+          <thead>
+            <tr>
+              <td>Name</td>
+              <td>Quantity</td>
+            </tr>
+          </thead>
+          <tbody>
+            {consumables.map((consumable) => (
+              <tr key={consumable.id} className="text-gray-500">
+                <td>{consumable.name}</td>
+                <td>{consumable.quantity}</td>
+              </tr>
             ))}
-          </div>
-        </div>
-      </div>
-    </div>
+          </tbody>
+        </table>
+      </Container>
+    </Body>
   )
 }
 

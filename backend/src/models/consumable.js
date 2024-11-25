@@ -16,16 +16,8 @@ Consumable.init(
     },
     quantity: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       defaultValue: 0,
-      validate: {
-        min: {
-          args: 0,
-          msg: 'Quantity cannot be negative',
-        },
-        isInt: {
-          msg: 'Quantity must be an integer',
-        },
-      },
     },
   },
   {
