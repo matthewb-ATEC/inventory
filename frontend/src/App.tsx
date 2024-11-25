@@ -2,9 +2,9 @@ import ErrorPage from './components/ErrorPage'
 import Home from './components/Home'
 import Layout from './components/Layout'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Shipments from './components/Shipments'
+import Shipments from './components/Shipments/Shipments'
 import Stock from './components/Stock'
-import Catalog from './components/Catalog'
+import Catalog from './components/Catalog/Catalog'
 
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([

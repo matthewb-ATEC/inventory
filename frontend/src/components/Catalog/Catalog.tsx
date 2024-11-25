@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import consumablesService from '../services/consumablesService'
-import { ConsumableType } from '../types'
-import Container from './Container'
-import Body from './Body'
+import consumablesService from '../../services/consumablesService'
+import { ConsumableType } from '../../types'
+import Container from '../Container'
+import Body from '../Body'
 import CatalogForm from './CatalogForm'
-import Loading from './Loading'
+import Loading from '../Loading'
 
 const Catalog = () => {
   const [consumables, setConsumables] = useState<ConsumableType[]>([])
