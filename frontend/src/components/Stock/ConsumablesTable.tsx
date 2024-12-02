@@ -4,6 +4,7 @@ import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import { ConsumableType } from '../../types'
@@ -49,7 +50,7 @@ const columns = [
   },
 
   {
-    header: 'Locations',
+    header: 'Location',
     columns: [
       columnHelper.accessor('shelfStockLocation', {
         header: () => 'Shelf',
@@ -71,6 +72,7 @@ const ConsumablesTable = () => {
     pageIndex: 0,
     pageSize: 10,
   })
+  const [sorting, setSorting] = useState([])
 
   useEffect(() => {
     const getConsumables = async (): Promise<void> => {
@@ -102,8 +104,11 @@ const ConsumablesTable = () => {
     getPaginationRowModel: getPaginationRowModel(),
     state: {
       pagination,
+      sorting,
     },
     onPaginationChange: setPagination,
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
   })
 
   return (
@@ -117,144 +122,189 @@ const ConsumablesTable = () => {
           onChange={(e) => {
             setSearchQuery(e.target.value)
           }}
-          className="w-1/4s border rounded p-2"
+          className="w-full md:w-1/4 border rounded p-2"
         />
       </div>
 
       {/* Table */}
-      <table className="w-full">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr className="bg-gray-50" key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  className={`text-left ${
-                    header.column.columns.length ? 'text-lg' : 'text-md'
-                  } font-normal`}
-                  colSpan={header.column.columns.length}
-                  key={header.id}
-                >
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr className="bg-gray-50 odd:bg-white" key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td className="py-3 text-gray-500" key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot>
-      </table>
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr className="bg-gray-50" key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    className={`text-left ${
+                      header.column.columns.length
+                        ? 'text-lg font-semibold'
+                        : 'text-md font-normal'
+                    } whitespace-nowrap px-4 pt-2`}
+                    colSpan={header.column.columns.length}
+                    key={header.id}
+                  >
+                    {header.isPlaceholder ? null : header.column.getCanSort() ? (
+                      <button
+                        onClick={() => {
+                          header.column.toggleSorting()
+                        }}
+                        className="flex items-center space-x-2"
+                      >
+                        <span className="">
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                        </span>
+                        <div
+                          className={`ml-2 text-sm ${
+                            header.column.getIsSorted()
+                              ? 'text-ATECblue'
+                              : 'text-gray-500'
+                          }`}
+                        >
+                          {header.column.getIsSorted() === 'asc' ? (
+                            <i className="material-icons text-sm">
+                              arrow_upward
+                            </i>
+                          ) : header.column.getIsSorted() === 'desc' ? (
+                            <i className="material-icons text-sm">
+                              arrow_downward
+                            </i>
+                          ) : null}
+                        </div>
+                      </button>
+                    ) : (
+                      // If the column is not sortable, just render the header text
+                      <span>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </span>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr className="bg-gray-50 odd:bg-white" key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    className="py-3 text-gray-500 px-4 whitespace-nowrap"
+                    key={cell.id}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            {table.getFooterGroups().map((footerGroup) => (
+              <tr key={footerGroup.id}>
+                {footerGroup.headers.map((header) => (
+                  <th key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.footer,
+                          header.getContext()
+                        )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </tfoot>
+        </table>
+      </div>
 
       {/* Pagination Controls */}
-      <div className="flex flex-col space-y-2">
-        <div className="grid grid-cols-3">
-          <span className="flex items-center justify-start gap-1">
-            <div>Page</div>
-            <strong>
-              {table.getState().pagination.pageIndex + 1} of{' '}
-              {table.getPageCount().toLocaleString()}
-            </strong>
-          </span>
+      {table.getPageCount() > 1 && (
+        <div className="flex flex-col space-y-2">
+          <div className="grid lg:grid-cols-3">
+            <span className="flex items-center justify-start gap-1">
+              <div className="hidden lg:block">Page</div>
+              <strong className="hidden lg:block">
+                {table.getState().pagination.pageIndex + 1} of{' '}
+                {table.getPageCount().toLocaleString()}
+              </strong>
+            </span>
 
-          <div className="flex items-center justify-center space-x-2">
-            <button
-              className={`${
-                table.getCanPreviousPage() ? 'text-gray-500' : 'text-gray-300'
-              } flex items-center`}
-              onClick={() => {
-                table.setPageIndex(0)
-              }}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <i className="material-icons">first_page</i>
-            </button>
-            <button
-              className={`${
-                table.getCanPreviousPage() ? 'text-gray-500' : 'text-gray-300'
-              } flex items-center`}
-              onClick={() => {
-                table.previousPage()
-              }}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <i className="material-icons">chevron_left</i>
-            </button>
-            <button
-              className={`${
-                table.getCanNextPage() ? 'text-gray-500' : 'text-gray-300'
-              } flex items-center`}
-              onClick={() => {
-                table.nextPage()
-              }}
-              disabled={!table.getCanNextPage()}
-            >
-              <i className="material-icons">chevron_right</i>
-            </button>
-            <button
-              className={`${
-                table.getCanNextPage() ? 'text-gray-500' : 'text-gray-300'
-              } flex items-center`}
-              onClick={() => {
-                table.setPageIndex(table.getPageCount() - 1)
-              }}
-              disabled={!table.getCanNextPage()}
-            >
-              <i className="material-icons">last_page</i>
-            </button>
+            <div className="flex items-center justify-center space-x-2">
+              <button
+                className={`${
+                  table.getCanPreviousPage() ? 'text-gray-500' : 'text-gray-300'
+                } flex items-center`}
+                onClick={() => {
+                  table.setPageIndex(0)
+                }}
+                disabled={!table.getCanPreviousPage()}
+              >
+                <i className="material-icons">first_page</i>
+              </button>
+              <button
+                className={`${
+                  table.getCanPreviousPage() ? 'text-gray-500' : 'text-gray-300'
+                } flex items-center`}
+                onClick={() => {
+                  table.previousPage()
+                }}
+                disabled={!table.getCanPreviousPage()}
+              >
+                <i className="material-icons">chevron_left</i>
+              </button>
+              <button
+                className={`${
+                  table.getCanNextPage() ? 'text-gray-500' : 'text-gray-300'
+                } flex items-center`}
+                onClick={() => {
+                  table.nextPage()
+                }}
+                disabled={!table.getCanNextPage()}
+              >
+                <i className="material-icons">chevron_right</i>
+              </button>
+              <button
+                className={`${
+                  table.getCanNextPage() ? 'text-gray-500' : 'text-gray-300'
+                } flex items-center`}
+                onClick={() => {
+                  table.setPageIndex(table.getPageCount() - 1)
+                }}
+                disabled={!table.getCanNextPage()}
+              >
+                <i className="material-icons">last_page</i>
+              </button>
+            </div>
+
+            <div className="flex justify-end gap-1 items-center ">
+              <div className="hidden lg:block text-gray-500">
+                Items per page
+              </div>
+              <select
+                className="hidden lg:block border rounded p-1"
+                value={table.getState().pagination.pageSize}
+                onChange={(e) => {
+                  table.setPageSize(Number(e.target.value))
+                }}
+              >
+                {[10, 20, 30, 40, 50].map((pageSize) => (
+                  <option key={pageSize} value={pageSize}>
+                    Show {pageSize}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          <div className="flex justify-end gap-1">
-            <div className="text-gray-500">Items per page</div>
-            <select
-              className="border rounded p-1"
-              value={table.getState().pagination.pageSize}
-              onChange={(e) => {
-                table.setPageSize(Number(e.target.value))
-              }}
-            >
-              {[10, 20, 30, 40, 50].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
-                  Show {pageSize}
-                </option>
-              ))}
-            </select>
+          <div className="hidden lg:block text-gray-500 whitespace-nowrap">
+            Showing {table.getRowModel().rows.length} of {table.getRowCount()}{' '}
+            Rows
           </div>
         </div>
-
-        <div className="text-gray-500">
-          Showing {table.getRowModel().rows.length} of {table.getRowCount()}{' '}
-          Rows
-        </div>
-      </div>
+      )}
     </div>
   )
 }
