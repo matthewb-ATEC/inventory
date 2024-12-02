@@ -10,14 +10,37 @@ Consumable.init(
       primaryKey: true,
       autoIncrement: true,
     },
+    sku: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    quantity: {
+    totalStock: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       defaultValue: 0,
+    },
+    shelfStock: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    overStock: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    availableStock: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    shelfStockLocation: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    overStockLocation: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
   },
   {

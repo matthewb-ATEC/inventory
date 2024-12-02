@@ -11,6 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@tanstack/react-table": "^8.20.5",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",
     "eslint-plugin-react": "^7.37.2",

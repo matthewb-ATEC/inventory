@@ -20,6 +20,12 @@ export interface AuthenticationType {
 
 export interface ConsumableType {
   id: string
+  sku: string
   name: string
-  quantity: number
+  totalStock: number
+  availableStock: number
+  shelfStock: number
+  overStock: number
+  shelfStockLocation: string
+  overStockLocation: string
 }
