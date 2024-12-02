@@ -5,6 +5,7 @@ import Container from '../Container'
 import Body from '../Body'
 import CatalogForm from './CatalogForm'
 import Loading from '../Loading'
+import CatalogTable from './CatalogTable'
 
 const Catalog = () => {
   const [consumables, setConsumables] = useState<ConsumableType[]>([])
@@ -25,31 +26,17 @@ const Catalog = () => {
 
   return (
     <Body>
-      <div className="flex flex-col space-y-8">
+      <div className="flex flex-col space-y-8 md:space-y-0 md:grid md:grid-cols-[1fr_3fr] md:gap-x-8 lg:grid-cols-[1fr_2fr]">
+        <CatalogForm />
         <Container>
           <div className="flex flex-col space-y-2">
             <label className="text-xl font-semibold" htmlFor="Catalog">
               Consumables
             </label>
 
-            <table className="bg-gray-50">
-              <thead>
-                <tr>
-                  <td>Name</td>
-                </tr>
-              </thead>
-              <tbody className="p-6">
-                {consumables.map((consumable) => (
-                  <tr key={consumable.id} className="text-gray-500">
-                    <td>{consumable.name}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <CatalogTable />
           </div>
         </Container>
-
-        <CatalogForm />
       </div>
     </Body>
   )
