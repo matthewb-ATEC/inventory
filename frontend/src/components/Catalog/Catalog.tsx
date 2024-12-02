@@ -26,7 +26,7 @@ const Catalog = () => {
 
   return (
     <Body>
-      <div className="flex flex-col space-y-8 md:space-y-0 md:grid md:grid-cols-[1fr_3fr] md:gap-x-8 lg:grid-cols-[1fr_2fr]">
+      <div className="flex flex-col space-y-8 lg:space-y-0 lg:grid lg:gap-x-8 lg:grid-cols-[1fr_2fr]">
         <CatalogForm />
         <Container>
           <div className="flex flex-col space-y-2">
