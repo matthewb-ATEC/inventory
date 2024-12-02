@@ -9,7 +9,7 @@ const Nav = () => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row bg-ATECblue md:px-24 lg:px-48">
+    <div className="flex flex-col md:flex-row bg-ATECblue px-4 md:px-24 lg:px-48">
       <div className="w-full flex justify-between items-center py-4">
         {/* Logo */}
         <img
