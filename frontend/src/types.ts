@@ -20,8 +20,11 @@ export interface AuthenticationType {
 
 export interface ConsumableType {
   id: string
+  type: string
+  category: string
   sku: string
   name: string
+  unitOfMeasure: string
   totalStock: number
   availableStock: number
   shelfStock: number

@@ -2,22 +2,61 @@ import { useState } from 'react'
 import consumablesService from '../../services/consumablesService'
 import { ConsumableType } from '../../types'
 import Container from '../Container'
+import Button from '../Button'
+import { Header, Subtitle, Text, Title } from '../Text'
+
+const types = ['Consumables', 'Materials']
+
+const categories = [
+  'Asset',
+  'Ceiling',
+  'Consumable',
+  'Door Hardware',
+  'Electrical',
+  'Equipment',
+  'Hardware',
+  'HVAC',
+  'Interstitial',
+  'Protocol',
+  'Safety',
+  'Strut',
+  'Tool',
+  'Wall',
+]
+
+const units = ['Each', 'Linear ft', 'Pair', 'Square ft']
+
+const requiredFields = ['type', 'category', 'sku', 'name', 'unitOfMeasure']
 
 const CatalogForm = () => {
+  const [type, setType] = useState<string>('')
   const [category, setCategory] = useState<string>('')
-  const [name, setName] = useState<string>('')
   const [sku, setSku] = useState<string>('')
+  const [name, setName] = useState<string>('')
+  const [unitOfMeasure, setUnitOfMeasure] = useState<string>('')
   const [totalStock, setTotalStock] = useState<string>('')
   const [shelfStock, setShelfStock] = useState<string>('')
   const [overStock, setOverStock] = useState<string>('')
   const [shelfStockLocation, setShelfStockLocation] = useState<string>('')
   const [overStockLocation, setOverStockLocation] = useState<string>('')
 
+  const isFormValid = () => {
+    return requiredFields.every((field) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const value = eval(field)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      return value && value.trim() !== ''
+    })
+  }
+
   const addToCatalog = async () => {
     const consumable: ConsumableType = {
       id: '',
-      name: name,
+      type: type,
+      category: category,
       sku: sku,
+      name: name,
+      unitOfMeasure: unitOfMeasure,
       totalStock: totalStock ? Number(totalStock) : 0,
       availableStock: totalStock ? Number(totalStock) : 0,
       shelfStock: shelfStock ? Number(shelfStock) : 0,
@@ -35,144 +74,218 @@ const CatalogForm = () => {
   return (
     <Container>
       <div className="flex flex-col space-y-2">
-        <label className="text-xl font-semibold" htmlFor="Catalog">
-          Add to Catalog
-        </label>
-        <div className="text-gray-500">
-          Insert a new item type into the catalog
-        </div>
+        <Title text="Add to Catalog" />
+        <Subtitle text="Insert a new item type into the catalog" />
       </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className="flex flex-col space-y-4">
+      <form>
+        <div className="flex flex-col space-y-8 mt-4">
           <div className="flex flex-col space-y-2">
-            <div className="text-sm">ITEM DETAILS</div>
+            <Header text="Item Details" />
             <div className="grid grid-cols-[1fr_2fr] items-center gap-y-2 gap-x-4">
-              <label className="text-gray-500 text-nowrap">Category</label>
+              {/* Item type */}
+              <Text className="md:text-nowrap" text="Type" />
               <select
-                id="category"
-                value={category}
+                id="type"
+                value={type}
                 onChange={(event) => {
-                  setCategory(event.target.value)
+                  setType(event.target.value)
                 }}
-                className={`border-b-2 border-gray-300 p-2 ${
+                className={`border-b-2 border-gray-300 p-2 pl-1 ${
                   category ? 'text-black' : 'text-gray-400'
                 }`}
               >
-                <option value="">Select a category</option>
-                <option value="consumable">Consumable</option>
-                <option value="material">Material</option>
+                <option value="">Select a type</option>
+                {types.map((type, index) => (
+                  <option key={index} value={type}>
+                    {type}
+                  </option>
+                ))}
               </select>
 
-              <label className="text-gray-500 text-nowrap">SKU Number</label>
-              <input
-                className="border-b-2 border-gray-300 p-2"
-                type="text"
-                placeholder="Identifier"
-                value={sku}
-                onChange={(event) => {
-                  setSku(event.target.value)
-                }}
-              />
+              {/* Item Category */}
+              {type && <Text className="md:text-nowrap" text="Category" />}
+              {type && (
+                <select
+                  id="category"
+                  value={category}
+                  onChange={(event) => {
+                    setCategory(event.target.value)
+                  }}
+                  className={`border-b-2 border-gray-300 p-2 pl-1 ${
+                    category ? 'text-black' : 'text-gray-400'
+                  }`}
+                >
+                  <option value="">Select a category</option>
+                  {categories.map((type, index) => (
+                    <option key={index} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              )}
 
-              <label className="text-gray-500 text-nowrap">Item Name</label>
-              <input
-                className="border-b-2 border-gray-300 p-2"
-                type="text"
-                placeholder="Name"
-                value={name}
-                onChange={(event) => {
-                  setName(event.target.value)
-                }}
-              />
+              {/* Item SKU Number */}
+              {type && category && (
+                <Text className="md:text-nowrap" text="SKU Number" />
+              )}
+              {type && category && (
+                <input
+                  className="border-b-2 border-gray-300 p-2"
+                  type="text"
+                  placeholder="Identifier"
+                  value={sku}
+                  onChange={(event) => {
+                    setSku(event.target.value)
+                  }}
+                />
+              )}
+
+              {/* Item Name */}
+              {type && category && sku && (
+                <Text className="md:text-nowrap" text="Item Name" />
+              )}
+              {type && category && sku && (
+                <input
+                  className="border-b-2 border-gray-300 p-2"
+                  type="text"
+                  placeholder="Name"
+                  value={name}
+                  onChange={(event) => {
+                    setName(event.target.value)
+                  }}
+                />
+              )}
+
+              {/* Unit of Measure */}
+              {type && category && sku && name && (
+                <Text className="md:text-nowrap" text="Unit of Measure" />
+              )}
+              {type && category && sku && name && (
+                <select
+                  id="unitOfMeasure"
+                  value={unitOfMeasure}
+                  onChange={(event) => {
+                    setUnitOfMeasure(event.target.value)
+                  }}
+                  className={`border-b-2 border-gray-300 p-2 pl-1 ${
+                    unitOfMeasure ? 'text-black' : 'text-gray-400'
+                  }`}
+                >
+                  <option value="">Select a unit</option>
+                  {units.map((type, index) => (
+                    <option key={index} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
           </div>
 
-          <div className="flex flex-col space-y-2">
-            <div className="text-sm">INITIAL STOCK</div>
-            <div className="grid grid-cols-[1fr_2fr] items-center gap-y-2 gap-x-4">
-              <label className="text-gray-500 text-nowrap">Total</label>
-              <input
-                className="border-b-2 border-gray-300 p-2"
-                type="number"
-                placeholder="Quantity"
-                value={totalStock}
-                onChange={(event) => {
-                  setTotalStock(event.target.value)
-                }}
-              />
+          {/* Initial Stock */}
+          {type && category && sku && name && unitOfMeasure && (
+            <div className="flex flex-col space-y-2">
+              <Header text="Initial Stock" />
+              <div className="grid grid-cols-[1fr_2fr] items-center gap-y-2 gap-x-4">
+                {/* Total quantity */}
+                <Text className="md:text-nowrap" text="Total" />
+                <input
+                  className="border-b-2 border-gray-300 p-2"
+                  type="number"
+                  placeholder="Quantity"
+                  value={totalStock}
+                  min={0}
+                  onChange={(event) => {
+                    setTotalStock(event.target.value)
+                  }}
+                />
 
-              <label className="text-gray-500 text-nowrap">Shelf</label>
-              <input
-                className="border-b-2 border-gray-300 p-2"
-                type="number"
-                placeholder="Quantity"
-                value={shelfStock}
-                onChange={(event) => {
-                  setShelfStock(event.target.value)
-                }}
-              />
-
-              <label className="text-gray-500 text-nowrap">Overstock</label>
-              <input
-                className="border-b-2 border-gray-300 p-2"
-                type="number"
-                placeholder="Quantity"
-                value={overStock}
-                onChange={(event) => {
-                  setOverStock(event.target.value)
-                }}
-              />
-            </div>
-          </div>
-
-          <div
-            className={`flex flex-col space-y-2 ${
-              shelfStock || overStock
-                ? 'transition-all duration-500 ease-in-out opacity-100'
-                : 'max-h-0 opacity-0'
-            }`}
-          >
-            <div className="text-sm">STOCK LOCATION</div>
-            <div className="grid grid-cols-[1fr_2fr] items-center gap-y-2 gap-x-4">
-              {shelfStock ? (
-                <>
-                  <label className="text-gray-500 text-nowrap">Shelf</label>
+                {/* Shelf stock quantity */}
+                {totalStock && (
+                  <Text className="text-gray-500 text-nowrap" text="Shelf" />
+                )}
+                {totalStock && (
                   <input
                     className="border-b-2 border-gray-300 p-2"
                     type="number"
-                    placeholder="Location"
-                    value={shelfStockLocation}
+                    placeholder="Quantity"
+                    value={shelfStock}
+                    min={0}
+                    max={totalStock}
                     onChange={(event) => {
-                      setShelfStockLocation(event.target.value)
+                      setShelfStock(event.target.value)
                     }}
                   />
-                </>
-              ) : null}
+                )}
 
-              {overStock ? (
-                <>
-                  <label className="text-gray-500 text-nowrap">Overstock</label>
+                {/* Overtstock quantity */}
+                {totalStock && (
+                  <Text
+                    className="text-gray-500 text-nowrap"
+                    text="Overstock"
+                  />
+                )}
+                {totalStock && (
                   <input
                     className="border-b-2 border-gray-300 p-2"
                     type="number"
-                    placeholder="Location"
-                    value={overStockLocation}
+                    placeholder="Quantity"
+                    value={overStock}
+                    min={0}
+                    max={totalStock}
                     onChange={(event) => {
-                      setOverStockLocation(event.target.value)
+                      setOverStock(event.target.value)
                     }}
                   />
-                </>
-              ) : null}
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
-          <button
-            type="submit"
-            className="p-2 px-4 rounded-md bg-ATECblue text-white"
-          >
-            Add
-          </button>
+          {/* Stock Locations */}
+          {(shelfStock || overStock) && (
+            <div className="flex flex-col space-y-2">
+              <Header text="Stock Location" />
+              <div className="grid grid-cols-[1fr_2fr] items-center gap-y-2 gap-x-4">
+                {/* Shelf location */}
+                {shelfStock && (
+                  <>
+                    <label className="text-gray-500 text-nowrap">Shelf</label>
+                    <input
+                      className="border-b-2 border-gray-300 p-2"
+                      type="text"
+                      placeholder="Location"
+                      value={shelfStockLocation}
+                      onChange={(event) => {
+                        setShelfStockLocation(event.target.value)
+                      }}
+                    />
+                  </>
+                )}
+
+                {/* Overtstock location */}
+                {overStock ? (
+                  <>
+                    <label className="text-gray-500 text-nowrap">
+                      Overstock
+                    </label>
+                    <input
+                      className="border-b-2 border-gray-300 p-2"
+                      type="text"
+                      placeholder="Location"
+                      value={overStockLocation}
+                      onChange={(event) => {
+                        setOverStockLocation(event.target.value)
+                      }}
+                    />
+                  </>
+                ) : null}
+              </div>
+            </div>
+          )}
+
+          <Button text="Add" onClick={handleSubmit} disabled={!isFormValid()} />
         </div>
       </form>
     </Container>

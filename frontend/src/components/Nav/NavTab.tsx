@@ -15,7 +15,7 @@ const NavTab = ({ name }: NavTabProps) => {
 
   return (
     <Link to={`/${link}`}>
-      <div className="w-full h-full py-2 px-8 md:px-0 hover:bg-white hover:text-ATECblue transition duration-200">
+      <div className="w-full h-full py-2 px-8 md:px-0 hover:bg-white hover:text-atec transition duration-200">
         {name}
       </div>
     </Link>

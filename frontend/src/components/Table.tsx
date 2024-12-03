@@ -95,7 +95,7 @@ const Table = <T extends object>({ data, columns }: TableProps<T>) => {
                         <div
                           className={`ml-2 text-sm ${
                             header.column.getIsSorted()
-                              ? 'text-ATECblue'
+                              ? 'text-atec'
                               : 'text-gray-500'
                           }`}
                         >

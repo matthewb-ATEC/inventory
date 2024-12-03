@@ -6,6 +6,7 @@ import Body from '../Body'
 import CatalogForm from './CatalogForm'
 import Loading from '../Loading'
 import CatalogTable from './CatalogTable'
+import { Subtitle, Title } from '../Text'
 
 const Catalog = () => {
   const [consumables, setConsumables] = useState<ConsumableType[]>([])
@@ -29,11 +30,11 @@ const Catalog = () => {
       <div className="flex flex-col space-y-8 lg:space-y-0 lg:grid lg:gap-x-8 lg:grid-cols-[1fr_2fr]">
         <CatalogForm />
         <Container>
-          <div className="flex flex-col space-y-2">
-            <label className="text-xl font-semibold" htmlFor="Catalog">
-              Consumables
-            </label>
-
+          <div className="flex flex-col space-y-8">
+            <div className="flex flex-col space-y-2">
+              <Title text="Catalog" />
+              <Subtitle text="Each unique item tracked in inventory" />
+            </div>
             <CatalogTable />
           </div>
         </Container>
