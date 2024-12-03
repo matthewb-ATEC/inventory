@@ -8,6 +8,8 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 
+const pageSizes = [10, 20, 30, 40, 50]
+
 interface TableProps<T> {
   data: T[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,7 +21,7 @@ const Table = <T extends object>({ data, columns }: TableProps<T>) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: pageSizes[0],
   })
   const [sorting, setSorting] = useState([])
 
@@ -158,7 +160,7 @@ const Table = <T extends object>({ data, columns }: TableProps<T>) => {
       </div>
 
       {/* Pagination Controls */}
-      {table.getPageCount() > 1 && (
+      {table.getRowCount() > pageSizes[0] && (
         <div className="flex flex-col space-y-2">
           <div className="grid lg:grid-cols-3">
             <span className="flex items-center justify-start gap-1">
@@ -227,7 +229,7 @@ const Table = <T extends object>({ data, columns }: TableProps<T>) => {
                   table.setPageSize(Number(e.target.value))
                 }}
               >
-                {[10, 20, 30, 40, 50].map((pageSize) => (
+                {pageSizes.map((pageSize) => (
                   <option key={pageSize} value={pageSize}>
                     Show {pageSize}
                   </option>
