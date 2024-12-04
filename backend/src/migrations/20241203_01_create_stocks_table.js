@@ -1,19 +1,16 @@
 import { DataTypes } from 'sequelize'
 
 export const up = async ({ context: queryInterface }) => {
-  await queryInterface.createTable('consumables', {
+  await queryInterface.createTable('stocks', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    sku: {
-      type: DataTypes.STRING,
+    item_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      references: { model: 'items', key: 'id' },
     },
     total_stock: {
       type: DataTypes.INTEGER,
@@ -27,18 +24,6 @@ export const up = async ({ context: queryInterface }) => {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
-    available_stock: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
-    shelf_stock_location: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    over_stock_location: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
@@ -51,5 +36,5 @@ export const up = async ({ context: queryInterface }) => {
 }
 
 export const down = async ({ context: queryInterface }) => {
-  await queryInterface.dropTable('consumables')
+  await queryInterface.dropTable('stocks')
 }

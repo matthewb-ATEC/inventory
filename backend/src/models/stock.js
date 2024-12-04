@@ -1,22 +1,18 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
+class Stock extends Model {}
 
-class Consumable extends Model {}
-
-Consumable.init(
+Stock.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    sku: {
-      type: DataTypes.STRING,
+    itemId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      references: { model: 'items', key: 'id' },
     },
     totalStock: {
       type: DataTypes.INTEGER,
@@ -30,25 +26,13 @@ Consumable.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
-    availableStock: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
-    shelfStockLocation: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    overStockLocation: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
   },
   {
     sequelize,
     underscored: true,
     timestamps: true,
-    modelName: 'consumable',
+    modelName: 'Stock',
   },
 )
 
-export default Consumable
+export default Stock

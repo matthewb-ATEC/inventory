@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react'
 import { createColumnHelper } from '@tanstack/react-table'
-import { ConsumableType } from '../../types'
-import consumablesService from '../../services/consumablesService'
 import Table from '../Table'
+import stockService from '../../services/stockService'
+import { StockType } from '../../types'
 
-const columnHelper = createColumnHelper<ConsumableType>()
+const columnHelper = createColumnHelper<StockType>()
 
 const columns = [
   {
     header: 'Item',
     columns: [
-      columnHelper.accessor('sku', {
+      columnHelper.accessor('item.sku', {
         header: () => 'SKU',
         cell: (info) => info.getValue(),
       }),
-      columnHelper.accessor('name', {
+      columnHelper.accessor('item.name', {
         header: () => 'Name',
         cell: (info) => info.getValue(),
       }),
@@ -28,10 +28,6 @@ const columns = [
         header: () => 'Total',
         cell: (info) => info.renderValue(),
       }),
-      columnHelper.accessor('availableStock', {
-        header: () => 'Available',
-        cell: (info) => info.renderValue(),
-      }),
       columnHelper.accessor('shelfStock', {
         header: () => 'On Shelf',
         cell: (info) => info.renderValue(),
@@ -42,7 +38,7 @@ const columns = [
       }),
     ],
   },
-
+  /*
   {
     header: 'Location',
     columns: [
@@ -56,28 +52,29 @@ const columns = [
       }),
     ],
   },
+  */
 ]
 
-const ConsumablesTable = () => {
-  const [consumables, setConsumables] = useState<ConsumableType[]>([])
+const StockTable = () => {
+  const [stock, setStock] = useState<StockType[]>([])
 
   useEffect(() => {
-    const getConsumables = async (): Promise<void> => {
+    const getStock = async (): Promise<void> => {
       try {
-        const response = await consumablesService.getAll()
-        setConsumables(response)
+        const response = await stockService.getAll()
+        setStock(response)
       } catch (error) {
-        console.error('Failed to fetch consumables:', error)
+        console.error('Failed to fetch stock:', error)
       }
     }
-    void getConsumables()
+    void getStock()
   }, [])
 
   return (
     <div>
-      <Table data={consumables} columns={columns} />
+      <Table data={stock} columns={columns} />
     </div>
   )
 }
 
-export default ConsumablesTable
+export default StockTable

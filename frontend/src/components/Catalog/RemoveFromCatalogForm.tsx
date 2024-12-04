@@ -1,4 +1,4 @@
-import consumablesService from '../../services/consumablesService'
+import itemsService from '../../services/itemsService'
 // Style
 import Container from '../Container'
 import Button from '../Button'
@@ -14,22 +14,18 @@ const validationSchema = Yup.object().shape({
       'SKU must follow the format XX-XXX-XXXX (2 letters, 3 letters, 4 alphanumeric characters)'
     )
     .required('SKU is required'),
-  name: Yup.string().required('Name is required'),
 })
 
 const RemoveFromCatalogForm = () => {
-  const handleSubmit = async (values: { sku: string; name: string }) => {
+  const handleSubmit = async (values: { sku: string }) => {
     if (
       !window.confirm(
-        `Are you sure you want to remove ${values.name} from the catalog?`
+        `Are you sure you want to remove ${values.sku} from the catalog?`
       )
-    )
+    ) {
       return
-    const item: { sku: string; name: string } = {
-      sku: values.sku,
-      name: values.name,
     }
-    await consumablesService.remove(item)
+    await itemsService.remove(values.sku)
   }
 
   return (
@@ -42,7 +38,6 @@ const RemoveFromCatalogForm = () => {
       <Formik
         initialValues={{
           sku: '',
-          name: '',
         }}
         validateOnMount
         validationSchema={validationSchema}
@@ -67,21 +62,6 @@ const RemoveFromCatalogForm = () => {
                   />
                   <ErrorMessage
                     name="sku"
-                    component="div"
-                    className="text-red-500 col-span-2"
-                  />
-
-                  {/* Item Name */}
-                  <Text className="md:text-nowrap" text="Item Name" />
-                  <Field
-                    name="name"
-                    placeholder="Name"
-                    className={`border-b-2 border-gray-300 p-2 ${
-                      values.name ? 'text-black' : 'text-gray-400'
-                    }`}
-                  />
-                  <ErrorMessage
-                    name="name"
                     component="div"
                     className="text-red-500 col-span-2"
                   />
