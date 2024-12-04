@@ -6,7 +6,7 @@ import Loading from '../Loading'
 // Style
 import Body from '../Body'
 import Container from '../Container'
-import { Subtitle, Text, Title } from '../Text'
+import { Header, Subtitle, Text, Title } from '../Text'
 
 const ItemDetails = () => {
   const { id } = useParams()
@@ -34,8 +34,11 @@ const ItemDetails = () => {
         <Subtitle text={item.sku} />
         <Text text={item.type} />
         <Text text={item.category} />
+        <Text text={item.unitOfMeasure} />
         <ItemStockTable item={item} />
         <ItemLocationTable item={item} />
+        <Header text="Action History" />
+        <Header text="Images" />
       </Container>
     </Body>
   )

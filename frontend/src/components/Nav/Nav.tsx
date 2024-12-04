@@ -9,7 +9,13 @@ const Nav = () => {
     setIsMenuOpen(!isMenuOpen)
   }
 
-  const links = ['Shipments', 'Purchases', 'Catalog', 'Stock', 'Requests']
+  const links = [
+    'Shipments',
+    //'Purchases',
+    'Catalog',
+    'Inventory',
+    //'Requests',
+  ]
   const sortedLinks = links.sort((a, b) => {
     return a.localeCompare(b)
   })

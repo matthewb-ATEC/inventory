@@ -1,17 +1,17 @@
 import Body from '../Body'
 import Container from '../Container'
 import { Title } from '../Text'
-import StockTable from './StockTable'
+import InventoryTable from './InventoryTable'
 
-const Stock = () => {
+const Inventory = () => {
   return (
     <Body>
       <Container>
-        <Title text={'Stock'} />
-        <StockTable />
+        <Title text={'Inventory'} />
+        <InventoryTable />
       </Container>
     </Body>
   )
 }
 
-export default Stock
+export default Inventory

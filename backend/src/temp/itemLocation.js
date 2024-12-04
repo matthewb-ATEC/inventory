@@ -13,20 +13,20 @@ ItemLocation.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    shelfStockLocation: {
+    shelfStockLocationId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    overstockLocation: {
+    overstockLocationId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
   },
   {
     sequelize,
-    modelName: 'ItemLocation',
-    tableName: 'item_location',
+    underscored: true,
     timestamps: true,
+    modelName: 'ItemLocation',
   },
 )
 

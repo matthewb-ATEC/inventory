@@ -5,12 +5,6 @@ const baseURL = '/api/stock'
 
 const getAll = async (): Promise<StockType[]> => {
   const response = await axios.get<StockType[]>(baseURL)
-  console.log(response.data)
-  return response.data
-}
-
-const getId = async (id: string): Promise<StockType> => {
-  const response = await axios.get<StockType>(`${baseURL}/${id}`)
   return response.data
 }
 
@@ -34,6 +28,6 @@ const remove = async (id: string): Promise<StockType> => {
   return response.data
 }
 
-const stockService = { getAll, getId, getItemStock, create, update, remove }
+const stockService = { getAll, getItemStock, create, update, remove }
 
 export default stockService

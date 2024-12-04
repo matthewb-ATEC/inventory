@@ -55,7 +55,7 @@ const columns = [
   */
 ]
 
-const StockTable = () => {
+const InventoryTable = () => {
   const [stock, setStock] = useState<StockType[]>([])
 
   useEffect(() => {
@@ -77,4 +77,4 @@ const StockTable = () => {
   )
 }
 
-export default StockTable
+export default InventoryTable

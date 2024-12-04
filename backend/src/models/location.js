@@ -20,9 +20,9 @@ Location.init(
   },
   {
     sequelize,
-    modelName: 'Location',
-    tableName: 'location',
+    underscored: true,
     timestamps: true,
+    modelName: 'Location',
   },
 )
 

@@ -7,6 +7,11 @@ export const up = async ({ context: queryInterface }) => {
       primaryKey: true,
       autoIncrement: true,
     },
+    sku: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
     type: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -14,11 +19,6 @@ export const up = async ({ context: queryInterface }) => {
     category: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    sku: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
     },
     name: {
       type: DataTypes.STRING,
