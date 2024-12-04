@@ -14,3 +14,15 @@ export interface StockType {
   shelfStock: number
   overStock: number
 }
+
+export interface ItemLocationType {
+  id: string
+  shelfStockLocation: LocationType
+  overstockLocation: LocationType
+}
+
+export interface LocationType {
+  id: string
+  aisle: string
+  shelf: string
+}

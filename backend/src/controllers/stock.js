@@ -17,4 +17,24 @@ stockRouter.get('/', async (_request, response) => {
   response.status(200).send(stock)
 })
 
+stockRouter.get('/:itemId', async (request, response) => {
+  const itemId = request.params.itemId
+
+  const stock = await Stock.findAll({
+    attributes: { exclude: ['itemId', 'createdAt', 'updatedAt'] },
+    include: [
+      {
+        model: Item,
+        as: 'item',
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+      },
+    ],
+    where: {
+      itemId,
+    },
+  })
+
+  response.status(200).send(stock)
+})
+
 export default stockRouter

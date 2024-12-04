@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
 export const up = async ({ context: queryInterface }) => {
-  await queryInterface.createTable('location', {
+  await queryInterface.createTable('locations', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -24,8 +24,16 @@ export const up = async ({ context: queryInterface }) => {
       defaultValue: DataTypes.NOW,
     },
   })
+
+  await queryInterface.addConstraint('locations', {
+    fields: ['aisle', 'shelf'],
+    type: 'unique',
+    name: 'unique_aisle_shelf',
+  })
 }
 
 export const down = async ({ context: queryInterface }) => {
-  await queryInterface.dropTable('location')
+  await queryInterface.removeConstraint('locations', 'unique_aisle_shelf')
+
+  await queryInterface.dropTable('locations')
 }

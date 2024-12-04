@@ -1,9 +1,19 @@
-import { Router } from 'express'
+import { request, Router } from 'express'
 import { Item } from '../models/index.js'
 const itemRouter = Router()
 
 itemRouter.get('/', async (_request, response) => {
   const item = await Item.findAll({
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+  })
+
+  response.status(200).send(item)
+})
+
+itemRouter.get('/:id', async (request, response) => {
+  const id = request.params.id
+
+  const item = await Item.findByPk(id, {
     attributes: { exclude: ['createdAt', 'updatedAt'] },
   })
 

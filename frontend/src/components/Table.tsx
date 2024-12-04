@@ -14,9 +14,10 @@ interface TableProps<T> {
   data: T[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   columns: ColumnDef<T, any>[]
+  search?: boolean
 }
 
-const Table = <T extends object>({ data, columns }: TableProps<T>) => {
+const Table = <T extends object>({ data, columns, search }: TableProps<T>) => {
   const [filteredData, setFilteredData] = useState<T[]>(data)
   const [searchQuery, setSearchQuery] = useState('')
   const [pagination, setPagination] = useState({
@@ -53,17 +54,19 @@ const Table = <T extends object>({ data, columns }: TableProps<T>) => {
   return (
     <div className="flex flex-col space-y-4">
       {/* Search Input */}
-      <div className="w-full justify-start">
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value)
-          }}
-          className="w-full md:w-1/4 border rounded p-2"
-        />
-      </div>
+      {search !== false && (
+        <div className="w-full justify-start">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value)
+            }}
+            className="w-full md:w-1/4 border rounded p-2"
+          />
+        </div>
+      )}
 
       {/* Table */}
       <div className="overflow-x-auto">
