@@ -63,7 +63,7 @@ const Table = <T extends object>({ data, columns, search }: TableProps<T>) => {
             onChange={(e) => {
               setSearchQuery(e.target.value)
             }}
-            className="w-full md:w-1/4 border rounded p-2"
+            className="w-full md:w-1/4 lg:w-1/2 border rounded p-2"
           />
         </div>
       )}

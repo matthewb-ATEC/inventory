@@ -1,28 +1,21 @@
-export interface ItemType {
-  id: string
-  type: string
-  category: string
-  sku: string
+export interface MaterialType {
+  id: number
   name: string
-  unitOfMeasure: string
+  vendor: string
+  size: string
+  units: string
+  tag: string
 }
 
-export interface StockType {
-  id: string
-  item: ItemType
-  totalStock: number
-  shelfStock: number
-  overStock: number
+export interface ProjectType {
+  number: number
+  name: string
 }
 
-export interface ItemLocationType {
-  id: string
-  shelfStockLocation: LocationType
-  overstockLocation: LocationType
-}
-
-export interface LocationType {
-  id: string
-  aisle: string
-  shelf: string
+export interface InventoryType {
+  id: number
+  material: MaterialType
+  project: ProjectType
+  quantity: number
+  sqft: number
 }
