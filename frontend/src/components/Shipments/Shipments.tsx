@@ -1,5 +1,4 @@
 import Body from '../Body'
-import { Subtitle, Title } from '../Text'
 import ShipmentsForm from './ShipmentsForm'
 
 const Shipments = () => {

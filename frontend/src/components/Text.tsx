@@ -22,7 +22,7 @@ export const Subtitle = ({ text, className }: TextProps) => {
 export const Header = ({ text, className }: TextProps) => {
   return (
     <div
-      className={`text${className} -sm text-text-secondary font-normal uppercase`}
+      className={`${className} text-sm text-text-secondary font-normal uppercase`}
     >
       {text}
     </div>
@@ -32,7 +32,6 @@ export const Header = ({ text, className }: TextProps) => {
 export const Text = ({ text, className }: TextProps) => {
   return (
     <div className={`${className} text-md text-text-muted font-normal`}>
-      {' '}
       {text}
     </div>
   )

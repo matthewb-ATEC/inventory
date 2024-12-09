@@ -75,3 +75,5 @@ export const inventory = [
     sqft: 0,
   },
 ]
+
+export const vendors = ['Plascore']
