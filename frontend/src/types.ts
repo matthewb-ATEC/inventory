@@ -1,11 +1,11 @@
 export interface MaterialType {
   id: number
   partNumber: string
-  vendor: string
-  tag: string
   partDescription: string
-  size: string
-  color: string
+  size: string | null
+  color: string | null
+  vendor: string
+  tag: string | null
 }
 
 export interface ProjectType {
@@ -13,10 +13,11 @@ export interface ProjectType {
   name: string
 }
 
-export interface InventoryType {
+export interface StockType {
   id: number
   material: MaterialType
-  project: ProjectType
+  project: string | null
+  //project: ProjectType
   quantity: number
-  sqft: number
+  //sqft: number
 }

@@ -14,8 +14,6 @@ export const up = async ({ context: queryInterface }) => {
     },
     project: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
     },
     quantity: {
       type: DataTypes.INTEGER,

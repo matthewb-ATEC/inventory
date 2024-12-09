@@ -8,11 +8,6 @@ const getAll = async (): Promise<StockType[]> => {
   return response.data
 }
 
-const getItemStock = async (itemId: string): Promise<StockType> => {
-  const response = await axios.get<StockType>(`${baseURL}/${itemId}`)
-  return response.data
-}
-
 const create = async (stock: StockType): Promise<StockType> => {
   const response = await axios.post<StockType>(baseURL, stock)
   return response.data
@@ -28,6 +23,6 @@ const remove = async (id: string): Promise<StockType> => {
   return response.data
 }
 
-const stockService = { getAll, getItemStock, create, update, remove }
+const stockService = { getAll, create, update, remove }
 
 export default stockService

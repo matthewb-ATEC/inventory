@@ -2,8 +2,8 @@ import Material from './material.js'
 import Stock from './stock.js'
 
 const defineRelationships = () => {
-  Material.hasOne(Stock, { foreignKey: 'materialId', as: 'material' })
-  Stock.belongsTo(Material, { foreignKey: 'materialId', as: 'material' })
+  Material.hasMany(Stock, { foreignKey: 'material_id', as: 'stocks' })
+  Stock.belongsTo(Material, { foreignKey: 'material_id', as: 'material' })
 }
 
 defineRelationships()

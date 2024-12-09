@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import Papa from 'papaparse'
-import { MaterialType } from '../../types'
+import { MaterialType, StockType } from '../../types'
 import materialsService from '../../services/materialsService'
 import { vendors } from '../../data'
+import stockService from '../../services/stockService'
 
 const CsvFileUpload = () => {
   const [file, setFile] = useState<File | null>(null)
   const [uploadedMaterials, setUploadedMaterials] = useState<MaterialType[]>([])
+  const [uploadedStocks, setUploadedStocks] = useState<StockType[]>([])
   const [existingMaterials, setExistingMaterials] = useState<MaterialType[]>([])
 
   const getMaterials = async () => {
@@ -28,7 +30,28 @@ const CsvFileUpload = () => {
 
   const addToDatabase = async (material: MaterialType) => {
     try {
-      await materialsService.create(material)
+      const response = await materialsService.create(material)
+
+      const matchingStock = uploadedStocks.find(
+        (stock) => stock.material.partNumber === material.partNumber
+      )
+
+      if (!matchingStock) {
+        console.error(
+          `No matching stock found for material: ${material.partNumber}`
+        )
+        return
+      }
+
+      const newStock = {
+        id: matchingStock.id,
+        material: response,
+        project: matchingStock.project,
+        quantity: matchingStock.quantity,
+      }
+
+      await stockService.create(newStock)
+
       void getMaterials()
     } catch (error: unknown) {
       console.log(
@@ -72,7 +95,7 @@ const CsvFileUpload = () => {
 
   const parseCustomerPN = (data: string) => {
     const regex = /Customer PN:\s*(\S+)/
-    const match = data.match(regex)
+    const match = regex.exec(data)
     return match ? match[1] : null
   }
 
@@ -100,21 +123,29 @@ const CsvFileUpload = () => {
               return null
             }
 
-            return {
-              partNumber: row[1]?.trim() || '',
-              partDescription: row[2]?.trim() || '',
-              size: row[3]?.trim() || '',
-              color: row[5]?.trim() || '',
-              quantity,
-              project: project,
+            const material: MaterialType = {
+              id: 0,
+              partNumber: row[1]?.trim(),
+              partDescription: row[2]?.trim(),
+              size: row[3]?.trim() ?? null,
+              color: row[5]?.trim() ?? null,
               vendor: vendors[0],
               tag: parseCustomerPN(row[3]?.trim()) ?? null,
             }
+
+            const stock: StockType = {
+              id: 0,
+              material,
+              project: project,
+              quantity,
+            }
+
+            return { material, stock }
           })
           .filter((item) => item !== null)
 
-        setUploadedMaterials(jsonData)
-        console.log(jsonData)
+        setUploadedMaterials(jsonData.map((object) => object.material))
+        setUploadedStocks(jsonData.map((object) => object.stock))
       },
       error: (error: unknown) => {
         console.error('Error parsing CSV:', error)
