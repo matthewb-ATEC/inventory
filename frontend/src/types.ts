@@ -1,10 +1,10 @@
 export interface MaterialType {
   id: number
-  name: string
-  vendor: string
+  partNumber: string
+  //vendor: string
+  partDescription: string
   size: string
-  units: string
-  tag: string
+  color: string
 }
 
 export interface ProjectType {

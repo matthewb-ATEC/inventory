@@ -1,11 +1,11 @@
-import Item from './item.js'
+import Material from './material.js'
 import Stock from './stock.js'
 
 const defineRelationships = () => {
-  Item.hasOne(Stock, { foreignKey: 'itemId', as: 'item' })
-  Stock.belongsTo(Item, { foreignKey: 'itemId', as: 'item' })
+  Material.hasOne(Stock, { foreignKey: 'materialId', as: 'material' })
+  Stock.belongsTo(Material, { foreignKey: 'materialId', as: 'material' })
 }
 
 defineRelationships()
 
-export { Item, Stock }
+export { Material, Stock }

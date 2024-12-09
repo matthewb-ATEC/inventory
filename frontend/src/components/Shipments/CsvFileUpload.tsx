@@ -1,8 +1,39 @@
-import { useState } from 'react'
+import { MouseEvent, useEffect, useState } from 'react'
 import Papa from 'papaparse'
+import { MaterialType } from '../../types'
+import materialsService from '../../services/materialsService'
 
 const CsvFileUpload = () => {
   const [file, setFile] = useState<File | null>(null)
+  const [uploadedMaterials, setUploadedMaterials] = useState<MaterialType[]>([])
+  const [existingMaterials, setExistingMaterials] = useState<MaterialType[]>([])
+
+  const getMaterials = async () => {
+    const materials = await materialsService.getAll()
+    setExistingMaterials(materials)
+  }
+
+  useEffect(() => {
+    void getMaterials()
+  }, [])
+
+  const handleClick = (
+    event: MouseEvent<HTMLButtonElement, MouseEvent>,
+    material: MaterialType
+  ) => {
+    event.preventDefault()
+    void addToDatabase(material)
+  }
+
+  const addToDatabase = async (material: MaterialType) => {
+    try {
+      const response = await materialsService.create(material)
+      void getMaterials()
+      console.log(response)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.[0]) {
@@ -66,15 +97,13 @@ const CsvFileUpload = () => {
               partDescription: row[2]?.trim() || '',
               size: row[3]?.trim() || '',
               color: row[5]?.trim() || '',
-              unitCost: parseFloat(
-                row[6]?.trim().replace('$', '').replace(',', '') || '0'
-              ),
               quantity,
               project: project,
             }
           })
           .filter((item) => item !== null)
 
+        setUploadedMaterials(jsonData)
         console.log(jsonData)
       },
       error: (error: unknown) => {
@@ -97,7 +126,39 @@ const CsvFileUpload = () => {
           </button>
         </div>
 
-        <div className="flex flex-col space-y-4"></div>
+        {uploadedMaterials.length > 0 && (
+          <div className="flex flex-col space-y-4">
+            {uploadedMaterials.map((material) => (
+              <div
+                key={material.partNumber}
+                className="grid grid-cols-[1fr_2fr_1fr_1fr_1fr_1fr]"
+              >
+                <div>{material.partNumber}</div>
+                <div>{material.partDescription}</div>
+                <div>{material.size}</div>
+                <div>{material.color}</div>
+
+                {existingMaterials.some(
+                  (existingMaterial) =>
+                    existingMaterial.partNumber === material.partNumber
+                ) ? (
+                  <div>Already in database</div>
+                ) : (
+                  <>
+                    <div>NOT in database</div>
+                    <button
+                      onClick={(event) => {
+                        handleClick(event, material)
+                      }}
+                    >
+                      Add to database
+                    </button>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     )
 

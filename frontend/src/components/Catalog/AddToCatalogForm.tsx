@@ -6,7 +6,7 @@ import { Header, Subtitle, Text, Title } from '../Text'
 // Form and input validation
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import itemsService from '../../services/itemsService'
+import itemsService from '../../services/materialsService'
 
 const types = ['Consumable', 'Material']
 

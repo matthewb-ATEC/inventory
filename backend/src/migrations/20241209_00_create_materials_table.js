@@ -1,32 +1,28 @@
 import { DataTypes } from 'sequelize'
 
 export const up = async ({ context: queryInterface }) => {
-  await queryInterface.createTable('items', {
+  await queryInterface.createTable('materials', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    sku: {
+    part_number: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },
-    type: {
+    part_description: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    category: {
+    size: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
-    name: {
+    color: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    unit_of_measure: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     created_at: {
       type: DataTypes.DATE,
@@ -40,5 +36,5 @@ export const up = async ({ context: queryInterface }) => {
 }
 
 export const down = async ({ context: queryInterface }) => {
-  await queryInterface.dropTable('items')
+  await queryInterface.dropTable('materials')
 }

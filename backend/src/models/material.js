@@ -1,43 +1,39 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
 
-class Item extends Model {}
+class Material extends Model {}
 
-Item.init(
+Material.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    sku: {
+    partNumber: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },
-    type: {
+    partDescription: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    category: {
+    size: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
-    name: {
+    color: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    unitOfMeasure: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
   },
   {
     sequelize,
     underscored: true,
     timestamps: true,
-    modelName: 'Item',
+    modelName: 'Material',
   },
 )
 
-export default Item
+export default Material

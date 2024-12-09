@@ -9,20 +9,11 @@ Stock.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    itemId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: { model: 'items', key: 'id' },
+    project: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
-    totalStock: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
-    shelfStock: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
-    overStock: {
+    quantity: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },

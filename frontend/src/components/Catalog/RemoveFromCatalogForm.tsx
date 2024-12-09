@@ -1,4 +1,4 @@
-import itemsService from '../../services/itemsService'
+import itemsService from '../../services/materialsService'
 // Style
 import Container from '../Container'
 import Button from '../Button'

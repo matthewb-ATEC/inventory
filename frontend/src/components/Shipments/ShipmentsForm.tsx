@@ -6,7 +6,9 @@ import CsvFileUpload from './CsvFileUpload'
 const shipmentStatuses = ['Arriving at Warehouse', 'Leaving Warehouse']
 
 const ShipmentsForm = () => {
-  const [shipmentStatus, setShipmentStatus] = useState<string>('')
+  const [shipmentStatus, setShipmentStatus] = useState<string>(
+    shipmentStatuses[0]
+  )
 
   return (
     <form className="flex flex-col space-y-4 bg-white p-8 rounded-md shadow-md">

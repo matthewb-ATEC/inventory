@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { StockType } from '../types'
 
-const baseURL = '/api/stock'
+const baseURL = '/api/stocks'
 
 const getAll = async (): Promise<StockType[]> => {
   const response = await axios.get<StockType[]>(baseURL)

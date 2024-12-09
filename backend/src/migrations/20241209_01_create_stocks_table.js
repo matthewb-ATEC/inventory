@@ -7,21 +7,19 @@ export const up = async ({ context: queryInterface }) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    item_id: {
+    material_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'items', key: 'id' },
+      references: { model: 'materials', key: 'id' },
     },
-    total_stock: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
+    project: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
-    shelf_stock: {
+    quantity: {
       type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
-    over_stock: {
-      type: DataTypes.INTEGER,
+      allowNull: false,
       defaultValue: 0,
     },
     created_at: {
