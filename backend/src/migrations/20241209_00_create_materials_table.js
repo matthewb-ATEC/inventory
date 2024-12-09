@@ -18,11 +18,16 @@ export const up = async ({ context: queryInterface }) => {
     },
     size: {
       type: DataTypes.STRING,
-      allowNull: true,
     },
     color: {
       type: DataTypes.STRING,
-      allowNull: true,
+    },
+    vendor: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    tag: {
+      type: DataTypes.STRING,
     },
     created_at: {
       type: DataTypes.DATE,

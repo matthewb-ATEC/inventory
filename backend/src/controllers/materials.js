@@ -21,13 +21,15 @@ materialsRouter.get('/:id', async (request, response) => {
 })
 
 materialsRouter.post('/', async (request, response) => {
-  const { partNumber, partDescription, size, color } = request.body
+  const { partNumber, partDescription, size, color, vendor, tag } = request.body
 
   const material = await Material.create({
     partNumber,
     partDescription,
     size,
     color,
+    vendor,
+    tag,
   })
 
   response.status(201).send(material)

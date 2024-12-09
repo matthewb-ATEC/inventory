@@ -28,6 +28,14 @@ const columns = [
         header: () => 'Color',
         cell: (info) => info.getValue(),
       }),
+      columnHelper.accessor('vendor', {
+        header: () => 'Vendor',
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor('tag', {
+        header: () => 'Tag',
+        cell: (info) => info.getValue(),
+      }),
     ],
   },
 ]

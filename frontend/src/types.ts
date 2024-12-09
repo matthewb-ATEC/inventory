@@ -1,7 +1,8 @@
 export interface MaterialType {
   id: number
   partNumber: string
-  //vendor: string
+  vendor: string
+  tag: string
   partDescription: string
   size: string
   color: string

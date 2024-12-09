@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Papa from 'papaparse'
 import { MaterialType } from '../../types'
 import materialsService from '../../services/materialsService'
+import { vendors } from '../../data'
 
 const CsvFileUpload = () => {
   const [file, setFile] = useState<File | null>(null)
@@ -69,6 +70,12 @@ const CsvFileUpload = () => {
       .join('\n')
   }
 
+  const parseCustomerPN = (data: string) => {
+    const regex = /Customer PN:\s*(\S+)/
+    const match = data.match(regex)
+    return match ? match[1] : null
+  }
+
   const parseCsv = (data: string) => {
     const preprocessedData = preprocessCsv(data)
 
@@ -100,6 +107,8 @@ const CsvFileUpload = () => {
               color: row[5]?.trim() || '',
               quantity,
               project: project,
+              vendor: vendors[0],
+              tag: parseCustomerPN(row[3]?.trim()) ?? null,
             }
           })
           .filter((item) => item !== null)

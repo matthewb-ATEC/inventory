@@ -21,11 +21,15 @@ Material.init(
     },
     size: {
       type: DataTypes.STRING,
-      allowNull: true,
     },
     color: {
       type: DataTypes.STRING,
-      allowNull: true,
+    },
+    vendor: {
+      type: DataTypes.STRING,
+    },
+    tag: {
+      type: DataTypes.STRING,
     },
   },
   {
