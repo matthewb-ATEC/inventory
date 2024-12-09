@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Papa from 'papaparse'
 import { MaterialType } from '../../types'
 import materialsService from '../../services/materialsService'
@@ -18,7 +18,7 @@ const CsvFileUpload = () => {
   }, [])
 
   const handleClick = (
-    event: MouseEvent<HTMLButtonElement, MouseEvent>,
+    event: React.MouseEvent<HTMLButtonElement>,
     material: MaterialType
   ) => {
     event.preventDefault()
