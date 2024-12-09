@@ -3,7 +3,8 @@ import Table from '../Table'
 import Container from '../Container'
 import { Subtitle, Title } from '../Text'
 import { MaterialType } from '../../types'
-import { catalog } from '../../data'
+import { useEffect, useState } from 'react'
+import materialsService from '../../services/materialsService'
 
 const columnHelper = createColumnHelper<MaterialType>()
 
@@ -11,20 +12,20 @@ const columns = [
   {
     header: 'Material',
     columns: [
-      columnHelper.accessor('name', {
-        header: () => 'Name',
+      columnHelper.accessor('partNumber', {
+        header: () => 'Part Number',
         cell: (info) => info.getValue(),
       }),
-      columnHelper.accessor('vendor', {
-        header: () => 'Vendor',
+      columnHelper.accessor('partDescription', {
+        header: () => 'Description',
         cell: (info) => info.getValue(),
       }),
       columnHelper.accessor('size', {
         header: () => 'Size',
         cell: (info) => info.getValue(),
       }),
-      columnHelper.accessor('tag', {
-        header: () => 'Tag',
+      columnHelper.accessor('color', {
+        header: () => 'Color',
         cell: (info) => info.getValue(),
       }),
     ],
@@ -32,6 +33,17 @@ const columns = [
 ]
 
 const CatalogTable = () => {
+  const [materials, setMaterials] = useState<MaterialType[]>([])
+
+  const getMaterials = async () => {
+    const materials = await materialsService.getAll()
+    setMaterials(materials)
+  }
+
+  useEffect(() => {
+    void getMaterials()
+  }, [])
+
   return (
     <Container>
       <div className="flex flex-col space-y-8">
@@ -39,7 +51,7 @@ const CatalogTable = () => {
           <Title text="Catalog" />
           <Subtitle text="Each unique item tracked in inventory" />
         </div>
-        <Table data={catalog} columns={columns} />
+        <Table data={materials} columns={columns} />
       </div>
     </Container>
   )

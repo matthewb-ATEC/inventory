@@ -27,11 +27,12 @@ const CsvFileUpload = () => {
 
   const addToDatabase = async (material: MaterialType) => {
     try {
-      const response = await materialsService.create(material)
+      await materialsService.create(material)
       void getMaterials()
-      console.log(response)
-    } catch (error) {
-      console.log(error)
+    } catch (error: unknown) {
+      console.log(
+        `Error adding material ${material.partNumber} to the database: ${error}`
+      )
     }
   }
 
