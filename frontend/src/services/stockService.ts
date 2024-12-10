@@ -10,12 +10,19 @@ const getAll = async (): Promise<StockType[]> => {
 
 const getMaterialStock = async (
   material: MaterialType,
-  stock: StockType
+  projectNumber: number | null
 ): Promise<StockType> => {
-  const response = await axios.get<StockType>(
-    `${baseURL}/material/${material.partNumber}/${stock.project}`
-  )
-  return response.data
+  if (projectNumber) {
+    const response = await axios.get<StockType>(
+      `${baseURL}/material/${material.partNumber}/${projectNumber}`
+    )
+    return response.data
+  } else {
+    const response = await axios.get<StockType>(
+      `${baseURL}/material/${material.partNumber}`
+    )
+    return response.data
+  }
 }
 
 const create = async (stock: StockType): Promise<StockType> => {

@@ -1,34 +1,30 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
-class Stock extends Model {}
+class Project extends Model {}
 
-Stock.init(
+Project.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    materialId: {
+    number: {
       type: DataTypes.INTEGER,
+      unique: true,
       allowNull: false,
-      references: { model: 'materials', key: 'id' },
     },
-    projectId: {
-      type: DataTypes.INTEGER,
-      references: { model: 'projects', key: 'id' },
-    },
-    quantity: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
   },
   {
     sequelize,
     underscored: true,
     timestamps: true,
-    modelName: 'stock',
+    modelName: 'project',
   },
 )
 
-export default Stock
+export default Project

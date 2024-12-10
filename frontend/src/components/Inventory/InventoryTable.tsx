@@ -50,15 +50,17 @@ const columns = [
   {
     header: 'Stock',
     columns: [
-      columnHelper.accessor('project', {
+      columnHelper.accessor('project.number', {
         header: () => 'Project',
-        cell: (info) => info.getValue(),
-        /*cell: (info) => {
-          // Use calculateSqft to compute the sqft
-          const { number, name } = info.row.original.project
-          const projectDisplay = `${number} ${name}`
-          return projectDisplay
-        },*/
+
+        cell: (info) => {
+          if (info.row.original.project) {
+            const { number, name } = info.row.original.project
+            const projectDisplay = `${number} ${name}`
+            return projectDisplay
+          }
+          return null
+        },
       }),
       columnHelper.accessor('quantity', {
         header: () => 'Quantity',

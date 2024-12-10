@@ -12,8 +12,9 @@ export const up = async ({ context: queryInterface }) => {
       allowNull: false,
       references: { model: 'materials', key: 'id' },
     },
-    project: {
-      type: DataTypes.STRING,
+    project_id: {
+      type: DataTypes.INTEGER,
+      references: { model: 'projects', key: 'id' },
     },
     quantity: {
       type: DataTypes.INTEGER,
@@ -29,8 +30,14 @@ export const up = async ({ context: queryInterface }) => {
       defaultValue: DataTypes.NOW,
     },
   })
+
+  await queryInterface.addIndex('stocks', ['material_id', 'project_id'], {
+    name: 'idx_material_project',
+  })
 }
 
 export const down = async ({ context: queryInterface }) => {
+  await queryInterface.removeIndex('stocks', 'idx_material_project')
+
   await queryInterface.dropTable('stocks')
 }

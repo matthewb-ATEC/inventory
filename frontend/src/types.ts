@@ -20,6 +20,6 @@ export interface VendorType {
 export interface StockType {
   id: number
   material: MaterialType
-  project: string | null
+  project: ProjectType | null
   quantity: number
 }

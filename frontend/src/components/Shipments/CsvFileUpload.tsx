@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Papa from 'papaparse'
-import { MaterialType, StockType } from '../../types'
+import { MaterialType, ProjectType, StockType } from '../../types'
 import materialsService from '../../services/materialsService'
 import { vendors } from '../../data'
 import stockService from '../../services/stockService'
@@ -20,7 +20,7 @@ const CsvFileUpload = () => {
     void getMaterials()
   }, [])
 
-  const handleIncrease = (
+  const handleIncreaseStock = (
     event: React.MouseEvent<HTMLButtonElement>,
     material: MaterialType
   ) => {
@@ -41,9 +41,13 @@ const CsvFileUpload = () => {
         return
       }
 
+      const projectNumber = uploadedStock.project
+        ? uploadedStock.project.number
+        : null
+
       const currentStock = await stockService.getMaterialStock(
         material,
-        uploadedStock
+        projectNumber
       )
 
       const newQuantity: number = currentStock.quantity + uploadedStock.quantity
@@ -67,15 +71,15 @@ const CsvFileUpload = () => {
     }
   }
 
-  const handleAdd = (
+  const handleAddMaterialToDatabase = (
     event: React.MouseEvent<HTMLButtonElement>,
     material: MaterialType
   ) => {
     event.preventDefault()
-    void addToDatabase(material)
+    void addMaterialToDatabase(material)
   }
 
-  const addToDatabase = async (material: MaterialType) => {
+  const addMaterialToDatabase = async (material: MaterialType) => {
     try {
       const response = await materialsService.create(material)
 
@@ -129,6 +133,7 @@ const CsvFileUpload = () => {
     }
   }
 
+  // Handles cells with commas in their data
   const preprocessCsv = (data: string): string => {
     return data
       .split('\n')
@@ -146,17 +151,18 @@ const CsvFileUpload = () => {
       .join('\n')
   }
 
+  // Extracts the material tag from the string commmonly in the 'size' cell
   const parseCustomerPN = (data: string) => {
     const regex = /Customer PN:\s*(\S+)/
     const match = regex.exec(data)
     return match ? match[1] : null
   }
 
+  // Extracts the dimensions from the 'size' cell
   const parseSize = (data: string) => {
     const regex =
       /(\d+(?:\.\d+)?"(?:[A-Za-z])?)\s*x\s*(\d+(?:\.\d+)?"(?:[A-Za-z])?)\s*x\s*(\d+(?:\.\d+)?"(?:[A-Za-z])?)/
     const match = regex.exec(data)
-    console.log(match)
     return match ? match[0] : null
   }
 
@@ -164,14 +170,18 @@ const CsvFileUpload = () => {
     const preprocessedData = preprocessCsv(data)
 
     Papa.parse(preprocessedData, {
-      header: false, // If your CSV has no header, keep this as false
+      header: false,
       skipEmptyLines: true,
       complete: (results) => {
         const rows = results.data as string[][]
 
         // Extract project name from the 4th row
         const fourthRow = rows[3] ?? []
-        const project = fourthRow[1]?.trim() ?? ''
+        const projectName = fourthRow[1]?.trim() ?? ''
+        const project: ProjectType = {
+          number: 0, // The spreadsheet does not contain the project number
+          name: projectName,
+        }
 
         // Extract materials starting from the 10th row
         const materials = rows.slice(10)
@@ -188,10 +198,10 @@ const CsvFileUpload = () => {
               id: 0,
               partNumber: row[1]?.trim(),
               partDescription: row[2]?.trim(),
-              size: parseSize(row[3]?.trim()) ?? null,
-              color: row[5]?.trim() ?? null,
+              size: parseSize(row[3]?.trim()),
+              color: row[5]?.trim(),
               vendor: vendors[0],
-              tag: parseCustomerPN(row[3]?.trim()) ?? null,
+              tag: parseCustomerPN(row[3]?.trim()),
             }
 
             const stock: StockType = {
@@ -248,7 +258,7 @@ const CsvFileUpload = () => {
                     <div>Already in database</div>
                     <button
                       onClick={(event) => {
-                        handleIncrease(event, material)
+                        handleIncreaseStock(event, material)
                       }}
                     >
                       Increase stock
@@ -259,7 +269,7 @@ const CsvFileUpload = () => {
                     <div>NOT in database</div>
                     <button
                       onClick={(event) => {
-                        handleAdd(event, material)
+                        handleAddMaterialToDatabase(event, material)
                       }}
                     >
                       Add to database
