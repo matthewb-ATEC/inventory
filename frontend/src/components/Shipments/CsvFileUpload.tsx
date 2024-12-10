@@ -20,7 +20,48 @@ const CsvFileUpload = () => {
     void getMaterials()
   }, [])
 
-  const handleClick = (
+  const handleIncrease = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    material: MaterialType
+  ) => {
+    event.preventDefault()
+    void increaseStock(material)
+  }
+
+  const increaseStock = async (material: MaterialType) => {
+    try {
+      const uploadedStock = uploadedStocks.find(
+        (stock) => stock.material.partNumber === material.partNumber
+      )
+
+      if (!uploadedStock) {
+        console.error(
+          `No matching stock found for material: ${material.partNumber}`
+        )
+        return
+      }
+
+      const currentStock = await stockService.getMaterialStock(
+        material,
+        uploadedStock
+      )
+
+      const newQuantity: number = currentStock.quantity + uploadedStock.quantity
+
+      const newStock: StockType = {
+        ...currentStock,
+        quantity: newQuantity,
+      }
+
+      await stockService.updateQuantity(currentStock.id, newStock)
+    } catch (error: unknown) {
+      console.log(
+        `Error increasing stock for material ${material.partNumber}: ${error}`
+      )
+    }
+  }
+
+  const handleAdd = (
     event: React.MouseEvent<HTMLButtonElement>,
     material: MaterialType
   ) => {
@@ -183,13 +224,22 @@ const CsvFileUpload = () => {
                   (existingMaterial) =>
                     existingMaterial.partNumber === material.partNumber
                 ) ? (
-                  <div>Already in database</div>
+                  <>
+                    <div>Already in database</div>
+                    <button
+                      onClick={(event) => {
+                        handleIncrease(event, material)
+                      }}
+                    >
+                      Increase stock
+                    </button>
+                  </>
                 ) : (
                   <>
                     <div>NOT in database</div>
                     <button
                       onClick={(event) => {
-                        handleClick(event, material)
+                        handleAdd(event, material)
                       }}
                     >
                       Add to database

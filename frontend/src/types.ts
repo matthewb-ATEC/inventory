@@ -21,7 +21,5 @@ export interface StockType {
   id: number
   material: MaterialType
   project: string | null
-  //project: ProjectType
   quantity: number
-  //sqft: number
 }
