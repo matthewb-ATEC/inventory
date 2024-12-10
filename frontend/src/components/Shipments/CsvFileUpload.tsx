@@ -54,6 +54,12 @@ const CsvFileUpload = () => {
       }
 
       await stockService.updateQuantity(currentStock.id, newStock)
+      setUploadedMaterials(
+        uploadedMaterials.filter(
+          (uploadedMaterial) =>
+            uploadedMaterial.partNumber != material.partNumber
+        )
+      )
     } catch (error: unknown) {
       console.log(
         `Error increasing stock for material ${material.partNumber}: ${error}`
@@ -92,6 +98,12 @@ const CsvFileUpload = () => {
       }
 
       await stockService.create(newStock)
+      setUploadedMaterials(
+        uploadedMaterials.filter(
+          (uploadedMaterial) =>
+            uploadedMaterial.partNumber != material.partNumber
+        )
+      )
 
       void getMaterials()
     } catch (error: unknown) {
@@ -140,6 +152,14 @@ const CsvFileUpload = () => {
     return match ? match[1] : null
   }
 
+  const parseSize = (data: string) => {
+    const regex =
+      /(\d+(?:\.\d+)?"(?:[A-Za-z])?)\s*x\s*(\d+(?:\.\d+)?"(?:[A-Za-z])?)\s*x\s*(\d+(?:\.\d+)?"(?:[A-Za-z])?)/
+    const match = regex.exec(data)
+    console.log(match)
+    return match ? match[0] : null
+  }
+
   const parseCsv = (data: string) => {
     const preprocessedData = preprocessCsv(data)
 
@@ -168,7 +188,7 @@ const CsvFileUpload = () => {
               id: 0,
               partNumber: row[1]?.trim(),
               partDescription: row[2]?.trim(),
-              size: row[3]?.trim() ?? null,
+              size: parseSize(row[3]?.trim()) ?? null,
               color: row[5]?.trim() ?? null,
               vendor: vendors[0],
               tag: parseCustomerPN(row[3]?.trim()) ?? null,
