@@ -13,6 +13,10 @@ export interface ProjectType {
   name: string
 }
 
+export interface VendorType {
+  name: string
+}
+
 export interface StockType {
   id: number
   material: MaterialType

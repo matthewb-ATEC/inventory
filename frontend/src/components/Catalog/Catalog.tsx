@@ -1,7 +1,10 @@
 import Body from '../Body'
-import CatalogTable from './CatalogTable'
 import RemoveFromCatalogForm from './RemoveFromCatalogForm'
 import AddToCatalogForm from './AddToCatalogForm'
+import MaterialTable from './MaterialTable'
+import VendorTable from './VendorTable'
+import Container from '../Container'
+import ProjectTable from './ProjectTable'
 
 const userIsAdmin = false
 
@@ -15,14 +18,24 @@ const Catalog = () => {
             <AddToCatalogForm />
             <RemoveFromCatalogForm />
           </div>
-          <CatalogTable />
+          <Container>
+            <MaterialTable />
+            <VendorTable />
+            <ProjectTable />
+          </Container>
         </div>
       </Body>
     )
 
   return (
     <Body>
-      <CatalogTable />
+      <Container>
+        <MaterialTable />
+        <div className="grid grid-cols-[1fr_1fr] gap-8">
+          <VendorTable />
+          <ProjectTable />
+        </div>
+      </Container>
     </Body>
   )
 }

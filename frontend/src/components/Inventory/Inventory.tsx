@@ -1,6 +1,6 @@
 import Body from '../Body'
 import Container from '../Container'
-import { Title } from '../Text'
+import { Subtitle, Title } from '../Text'
 import InventoryTable from './InventoryTable'
 
 const Inventory = () => {
@@ -8,6 +8,7 @@ const Inventory = () => {
     <Body>
       <Container>
         <Title text={'Inventory'} />
+        <Subtitle text="View total and project specific stock" />
         <InventoryTable />
       </Container>
     </Body>

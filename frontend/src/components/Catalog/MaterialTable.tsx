@@ -1,6 +1,5 @@
 import { createColumnHelper } from '@tanstack/react-table'
 import Table from '../Table'
-import Container from '../Container'
 import { Subtitle, Title } from '../Text'
 import { MaterialType } from '../../types'
 import { useEffect, useState } from 'react'
@@ -40,7 +39,7 @@ const columns = [
   },
 ]
 
-const CatalogTable = () => {
+const MaterialTable = () => {
   const [materials, setMaterials] = useState<MaterialType[]>([])
 
   const getMaterials = async () => {
@@ -53,16 +52,14 @@ const CatalogTable = () => {
   }, [])
 
   return (
-    <Container>
-      <div className="flex flex-col space-y-8">
-        <div className="flex flex-col space-y-2">
-          <Title text="Catalog" />
-          <Subtitle text="Each unique item tracked in inventory" />
-        </div>
-        <Table data={materials} columns={columns} />
+    <div className="flex flex-col space-y-8">
+      <div className="flex flex-col space-y-2">
+        <Title text="Catalog" />
+        <Subtitle text="Each unique item tracked in inventory" />
       </div>
-    </Container>
+      <Table data={materials} columns={columns} />
+    </div>
   )
 }
 
-export default CatalogTable
+export default MaterialTable
