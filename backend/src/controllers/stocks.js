@@ -3,7 +3,24 @@ import { Material, Stock, Project } from '../models/index.js'
 const stocksRouter = Router()
 
 const stockFinder = async (request, response, next) => {
-  const stock = await Stock.findByPk(request.params.id)
+  const { id } = request.params
+  const stock = await Stock.findByPk(id, {
+    attributes: {
+      exclude: ['materialId', 'projectId', 'createdAt', 'updatedAt'],
+    },
+    include: [
+      {
+        model: Material,
+        as: 'material',
+        exclude: ['createdAt', 'updatedAt'],
+      },
+      {
+        model: Project,
+        as: 'project',
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+      },
+    ],
+  })
   if (!stock) {
     return response.status(404).json({ error: 'Stock not found' })
   }
@@ -33,84 +50,40 @@ stocksRouter.get('/', async (_request, response) => {
   response.status(200).send(stock)
 })
 
-stocksRouter.get(
-  '/material/:partNumber/:projectNumber',
-  async (request, response) => {
-    const { partNumber, projectNumber } = request.params
-
-    try {
-      const stock = await Stock.findOne({
-        attributes: {
-          exclude: ['materialId', 'projectId', 'createdAt', 'updatedAt'],
-        },
-        include: [
-          {
-            model: Material,
-            as: 'material',
-            where: {
-              partNumber,
-            },
-            attributes: { exclude: ['createdAt', 'updatedAt'] },
-          },
-          {
-            model: Project,
-            as: 'project',
-            where: {
-              number: projectNumber,
-            },
-            attributes: { exclude: ['createdAt', 'updatedAt'] },
-          },
-        ],
-      })
-
-      if (!stock) {
-        return response.status(404).send({
-          message: 'No stock found for the given material and project',
-        })
-      }
-
-      response.status(200).send(stock)
-    } catch (error) {
-      response.status(500).send({ error: 'Error fetching stock' })
-    }
-  },
-)
-
 stocksRouter.get('/material/:partNumber', async (request, response) => {
   const { partNumber } = request.params
 
-  try {
-    const stock = await Stock.findOne({
-      attributes: {
-        exclude: ['materialId', 'projectId', 'createdAt', 'updatedAt'],
+  const whereProject = request.query.projectNumber
+    ? { projectNumber: request.query.projectNumber }
+    : {}
+
+  const stock = await Stock.findOne({
+    attributes: {
+      exclude: ['materialId', 'projectId', 'createdAt', 'updatedAt'],
+    },
+    include: [
+      {
+        model: Material,
+        as: 'material',
+        where: { partNumber },
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
       },
-      include: [
-        {
-          model: Material,
-          as: 'material',
-          where: {
-            partNumber,
-          },
-          attributes: { exclude: ['createdAt', 'updatedAt'] },
-        },
-        {
-          model: Project,
-          as: 'project',
-          attributes: { exclude: ['createdAt', 'updatedAt'] },
-        },
-      ],
+      {
+        model: Project,
+        as: 'project',
+        where: whereProject,
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+      },
+    ],
+  })
+
+  if (!stock) {
+    return response.status(404).send({
+      message: 'No stock found for the given material and project',
     })
-
-    if (!stock) {
-      return response.status(404).send({
-        message: 'No stock found for the given material and project',
-      })
-    }
-
-    response.status(200).send(stock)
-  } catch (error) {
-    response.status(500).send({ error: 'Error fetching stock' })
   }
+
+  response.status(200).send(stock)
 })
 
 stocksRouter.post('/', async (request, response) => {
@@ -136,9 +109,19 @@ stocksRouter.post('/', async (request, response) => {
   response.status(201).send(stock)
 })
 
-stocksRouter.put('/:id/quantity', stockFinder, async (request, response) => {
-  const { quantity } = request.body
+stocksRouter.put('/:id', stockFinder, async (request, response) => {
+  const { quantity, material, project } = request.body
+
+  if (!material || !material.id) {
+    return response.status(400).json({
+      error: 'Material objects with valid IDs are required.',
+    })
+  }
+
   request.stock.quantity = quantity
+  request.stock.materialId = material.id
+  request.stock.projectId = project.id ? project.id : null
+
   await request.stock.save()
   response.status(201).send(request.stock)
 })

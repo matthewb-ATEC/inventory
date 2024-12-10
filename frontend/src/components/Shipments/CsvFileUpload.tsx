@@ -43,7 +43,7 @@ const CsvFileUpload = () => {
 
       const projectNumber = uploadedStock.project
         ? uploadedStock.project.number
-        : null
+        : undefined
 
       const currentStock = await stockService.getMaterialStock(
         material,
@@ -57,7 +57,7 @@ const CsvFileUpload = () => {
         quantity: newQuantity,
       }
 
-      await stockService.updateQuantity(currentStock.id, newStock)
+      await stockService.update(currentStock.id, newStock)
       setUploadedMaterials(
         uploadedMaterials.filter(
           (uploadedMaterial) =>

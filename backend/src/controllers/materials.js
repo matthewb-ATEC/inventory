@@ -1,6 +1,18 @@
-import { request, Router } from 'express'
+import { Router } from 'express'
 import { Material } from '../models/index.js'
 const materialsRouter = Router()
+
+const materialFinder = async (request, _response, next) => {
+  const { id } = request.params
+  const material = await Material.findByPk(id, {
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+  })
+  if (!material) {
+    throw new NotFoundError(`Material with id ${id} not found`)
+  }
+  request.material = material
+  next()
+}
 
 materialsRouter.get('/', async (_request, response) => {
   const material = await Material.findAll({
@@ -10,14 +22,8 @@ materialsRouter.get('/', async (_request, response) => {
   response.status(200).send(material)
 })
 
-materialsRouter.get('/:id', async (request, response) => {
-  const id = request.params.id
-
-  const material = await Material.findByPk(id, {
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
-  })
-
-  response.status(200).send(material)
+materialsRouter.get('/:id', materialFinder, async (request, response) => {
+  response.status(200).send(request.material)
 })
 
 materialsRouter.post('/', async (request, response) => {
@@ -35,20 +41,9 @@ materialsRouter.post('/', async (request, response) => {
   response.status(201).send(material)
 })
 
-materialsRouter.delete('/:id', async (request, response) => {
-  const { id } = request.params
-
-  const material = await Material.findOne({
-    where: { id },
-  })
-
-  if (!material) {
-    return response.status(404).json({ message: 'material entry not found' })
-  }
-
-  await material.destroy()
-
-  response.status(200).json({ message: 'material entry deleted successfully' })
+materialsRouter.delete('/:id', materialFinder, async (request, response) => {
+  await request.material.destroy()
+  response.status(204).json({ message: 'material entry deleted successfully' })
 })
 
 export default materialsRouter

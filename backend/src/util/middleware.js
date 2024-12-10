@@ -13,12 +13,21 @@ const unknownEndpoint = (request, response) => {
 }
 
 const errorHandler = (error, request, response, next) => {
-  logger.error(error.message)
-  next(error)
+  const { name, message, statusCode } = error
+
+  logger.error(`${name}: ${message}`)
+
+  if (response.headersSent) {
+    return next(error)
+  }
+
+  // Handle known errors
+  if (statusCode) {
+    response.status(statusCode).json({ error: message })
+  } else {
+    // Handle unexpected errors
+    response.status(500).json({ error: 'Internal Server Error' })
+  }
 }
 
-export default {
-  requestLogger,
-  unknownEndpoint,
-  errorHandler,
-}
+export default { requestLogger, unknownEndpoint, errorHandler }

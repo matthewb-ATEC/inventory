@@ -10,19 +10,13 @@ const getAll = async (): Promise<StockType[]> => {
 
 const getMaterialStock = async (
   material: MaterialType,
-  projectNumber: number | null
+  projectNumber?: number
 ): Promise<StockType> => {
-  if (projectNumber) {
-    const response = await axios.get<StockType>(
-      `${baseURL}/material/${material.partNumber}/${projectNumber}`
-    )
-    return response.data
-  } else {
-    const response = await axios.get<StockType>(
-      `${baseURL}/material/${material.partNumber}`
-    )
-    return response.data
-  }
+  const requestURL = `${baseURL}/material/${material.partNumber}`
+  const params = projectNumber ? { projectNumber } : undefined
+
+  const response = await axios.get<StockType>(requestURL, { params })
+  return response.data
 }
 
 const create = async (stock: StockType): Promise<StockType> => {
@@ -30,14 +24,8 @@ const create = async (stock: StockType): Promise<StockType> => {
   return response.data
 }
 
-const updateQuantity = async (
-  id: number,
-  newStock: StockType
-): Promise<StockType> => {
-  const response = await axios.put<StockType>(
-    `${baseURL}/${id}/quantity`,
-    newStock
-  )
+const update = async (id: number, newStock: StockType): Promise<StockType> => {
+  const response = await axios.put<StockType>(`${baseURL}/${id}`, newStock)
   return response.data
 }
 
@@ -50,7 +38,7 @@ const stockService = {
   getAll,
   getMaterialStock,
   create,
-  updateQuantity,
+  update,
   remove,
 }
 
