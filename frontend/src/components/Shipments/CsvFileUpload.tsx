@@ -4,10 +4,44 @@ import { MaterialType, ProjectType, StockType } from '../../types'
 import materialsService from '../../services/materialsService'
 import { vendors } from '../../data'
 import stockService from '../../services/stockService'
+import Table from '../Table'
+import { createColumnHelper } from '@tanstack/react-table'
+import Button from '../Button'
+import { Text } from '../Text'
+
+const columnHelper = createColumnHelper<StockType>()
+
+const columns = [
+  {
+    header: 'Material',
+    columns: [
+      columnHelper.accessor('material.partDescription', {
+        header: () => 'Description',
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor('material.size', {
+        header: () => 'Size',
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor('material.color', {
+        header: () => 'Color',
+        cell: (info) => info.getValue(),
+      }),
+    ],
+  },
+  {
+    header: 'Stock',
+    columns: [
+      columnHelper.accessor('quantity', {
+        header: () => 'Quantity',
+        cell: (info) => info.renderValue(),
+      }),
+    ],
+  },
+]
 
 const CsvFileUpload = () => {
   const [file, setFile] = useState<File | null>(null)
-  const [uploadedMaterials, setUploadedMaterials] = useState<MaterialType[]>([])
   const [uploadedStocks, setUploadedStocks] = useState<StockType[]>([])
   const [existingMaterials, setExistingMaterials] = useState<MaterialType[]>([])
 
@@ -19,14 +53,6 @@ const CsvFileUpload = () => {
   useEffect(() => {
     void getMaterials()
   }, [])
-
-  const handleIncreaseStock = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    material: MaterialType
-  ) => {
-    event.preventDefault()
-    void increaseStock(material)
-  }
 
   const increaseStock = async (material: MaterialType) => {
     try {
@@ -58,12 +84,6 @@ const CsvFileUpload = () => {
       }
 
       await stockService.update(currentStock.id, newStock)
-      setUploadedMaterials(
-        uploadedMaterials.filter(
-          (uploadedMaterial) =>
-            uploadedMaterial.partNumber != material.partNumber
-        )
-      )
     } catch (error: unknown) {
       console.log(
         `Error increasing stock for material ${material.partNumber}: ${error}`
@@ -71,15 +91,7 @@ const CsvFileUpload = () => {
     }
   }
 
-  const handleAddMaterialToDatabase = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    material: MaterialType
-  ) => {
-    event.preventDefault()
-    void addMaterialToDatabase(material)
-  }
-
-  const addMaterialToDatabase = async (material: MaterialType) => {
+  const addMaterialToCatalog = async (material: MaterialType) => {
     try {
       const response = await materialsService.create(material)
 
@@ -102,19 +114,46 @@ const CsvFileUpload = () => {
       }
 
       await stockService.create(newStock)
-      setUploadedMaterials(
-        uploadedMaterials.filter(
-          (uploadedMaterial) =>
-            uploadedMaterial.partNumber != material.partNumber
-        )
-      )
-
-      void getMaterials()
     } catch (error: unknown) {
       console.log(
         `Error adding material ${material.partNumber} to the database: ${error}`
       )
     }
+  }
+
+  const processShipment = async () => {
+    const stocksForIncrease = uploadedStocks.filter((stock) =>
+      existingMaterials.some(
+        (material) => material.partNumber === stock.material.partNumber
+      )
+    )
+
+    const newStocksForCatalog = uploadedStocks.filter(
+      (stock) =>
+        !existingMaterials.some(
+          (material) => material.partNumber === stock.material.partNumber
+        )
+    )
+
+    const processedStockIds = new Set<number>()
+
+    await Promise.all(
+      stocksForIncrease.map(async (stock) => {
+        await increaseStock(stock.material)
+        processedStockIds.add(stock.id)
+      })
+    )
+
+    await Promise.all(
+      newStocksForCatalog.map(async (stock) => {
+        await addMaterialToCatalog(stock.material)
+        processedStockIds.add(stock.id)
+      })
+    )
+
+    setUploadedStocks((prev) =>
+      prev.filter((stock) => !processedStockIds.has(stock.id))
+    )
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -215,7 +254,6 @@ const CsvFileUpload = () => {
           })
           .filter((item) => item !== null)
 
-        setUploadedMaterials(jsonData.map((object) => object.material))
         setUploadedStocks(jsonData.map((object) => object.stock))
       },
       error: (error: unknown) => {
@@ -227,9 +265,10 @@ const CsvFileUpload = () => {
   if (file)
     return (
       <div className="flex flex-col space-y-8">
-        <div className="flex flex-col space-y-4">
-          <p>File Name: {file.name}</p>
+        <div className="flex justify-between">
+          <Text text={`File Name: ${file.name}`} />
           <button
+            className="w-fit text-red-500"
             onClick={() => {
               setFile(null)
             }}
@@ -238,46 +277,15 @@ const CsvFileUpload = () => {
           </button>
         </div>
 
-        {uploadedMaterials.length > 0 && (
-          <div className="flex flex-col space-y-4">
-            {uploadedMaterials.map((material) => (
-              <div
-                key={material.partNumber}
-                className="grid grid-cols-[1fr_2fr_1fr_1fr_1fr_1fr]"
-              >
-                <div>{material.partNumber}</div>
-                <div>{material.partDescription}</div>
-                <div>{material.size}</div>
-                <div>{material.color}</div>
-
-                {existingMaterials.some(
-                  (existingMaterial) =>
-                    existingMaterial.partNumber === material.partNumber
-                ) ? (
-                  <>
-                    <div>Already in database</div>
-                    <button
-                      onClick={(event) => {
-                        handleIncreaseStock(event, material)
-                      }}
-                    >
-                      Increase stock
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <div>NOT in database</div>
-                    <button
-                      onClick={(event) => {
-                        handleAddMaterialToDatabase(event, material)
-                      }}
-                    >
-                      Add to database
-                    </button>
-                  </>
-                )}
-              </div>
-            ))}
+        {uploadedStocks.length > 0 && (
+          <div className="flex flex-col space-y-8">
+            <Table data={uploadedStocks} columns={columns} search={false} />
+            <Button
+              text="Confirm Shipment"
+              onClick={() => {
+                void processShipment()
+              }}
+            />
           </div>
         )}
       </div>
