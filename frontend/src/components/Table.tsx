@@ -133,10 +133,7 @@ const Table = <T extends object>({ data, columns, search }: TableProps<T>) => {
             {table.getRowModel().rows.map((row) => (
               <tr className="bg-gray-50 odd:bg-white" key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <td
-                    className="py-3 text-gray-500 px-4 whitespace-nowrap"
-                    key={cell.id}
-                  >
+                  <td className="py-3 text-gray-500 px-4" key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}

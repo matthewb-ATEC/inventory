@@ -48,20 +48,21 @@ const columns = [
   },
 
   {
-    header: 'Stock',
+    header: 'Project',
     columns: [
       columnHelper.accessor('project.number', {
-        header: () => 'Project',
-
-        cell: (info) => {
-          if (info.row.original.project) {
-            const { number, name } = info.row.original.project
-            const projectDisplay = `${number} ${name}`
-            return projectDisplay
-          }
-          return null
-        },
+        header: () => 'Number',
+        cell: (info) => info.renderValue(),
       }),
+      columnHelper.accessor('project.name', {
+        header: () => 'Name',
+        cell: (info) => info.renderValue(),
+      }),
+    ],
+  },
+  {
+    header: 'Stock',
+    columns: [
       columnHelper.accessor('quantity', {
         header: () => 'Quantity',
         cell: (info) => info.renderValue(),
