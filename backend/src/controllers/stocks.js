@@ -126,4 +126,13 @@ stocksRouter.put('/:id', stockFinder, async (request, response) => {
   response.status(201).send(request.stock)
 })
 
+stocksRouter.delete('/', async (request, response) => {
+  await Stock.destroy({
+    where: {},
+    truncate: true,
+    cascade: true,
+  })
+  response.status(204).json({ message: 'All stocks deleted successfully' })
+})
+
 export default stocksRouter

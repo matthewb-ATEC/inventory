@@ -5,7 +5,7 @@ interface TextProps {
 
 export const Title = ({ text, className }: TextProps) => {
   return (
-    <div className={`${className} text-lg text-text-primary font-bold`}>
+    <div className={`text-lg text-text-primary font-semibold ${className}`}>
       {text}
     </div>
   )
@@ -13,7 +13,7 @@ export const Title = ({ text, className }: TextProps) => {
 
 export const Subtitle = ({ text, className }: TextProps) => {
   return (
-    <div className={`${className} text-md text-text-secondary font-normal`}>
+    <div className={`text-md text-text-secondary font-normal ${className}`}>
       {text}
     </div>
   )
@@ -22,7 +22,7 @@ export const Subtitle = ({ text, className }: TextProps) => {
 export const Header = ({ text, className }: TextProps) => {
   return (
     <div
-      className={`${className} text-sm text-text-secondary font-normal uppercase`}
+      className={`text-sm text-text-secondary font-normal uppercase ${className}`}
     >
       {text}
     </div>
@@ -31,7 +31,7 @@ export const Header = ({ text, className }: TextProps) => {
 
 export const Text = ({ text, className }: TextProps) => {
   return (
-    <div className={`${className} text-md text-text-muted font-normal`}>
+    <div className={`text-md text-text-muted font-normal ${className}`}>
       {text}
     </div>
   )
@@ -39,7 +39,7 @@ export const Text = ({ text, className }: TextProps) => {
 
 export const Subtext = ({ text, className }: TextProps) => {
   return (
-    <div className={`${className} text-sm text-text-muted font-light`}>
+    <div className={`text-sm text-text-muted font-light ${className}`}>
       {text}
     </div>
   )

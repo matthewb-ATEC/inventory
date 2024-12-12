@@ -22,7 +22,7 @@ const Nav = () => {
 
   return (
     <div className="flex flex-col md:flex-row bg-gradient-to-br from-atec-light to-atec md:px-24 lg:px-48">
-      <div className="w-full flex justify-between items-center p-4 md:py-4 md:px-0">
+      <div className="w-full flex justify-between items-center p-4 px-8 md:py-4 md:px-0">
         {/* Logo */}
         <img
           className="h-12 max-w-full object-contain"
@@ -47,9 +47,9 @@ const Nav = () => {
         {sortedLinks.map((link, index) => (
           <NavTab key={index} name={link} />
         ))}
-        <Link to={`/`}>
+        <Link to={`/debug`}>
           <div className="w-full h-full py-2 px-8 md:px-0 hover:bg-white hover:text-atec transition duration-200">
-            Home
+            Debug
           </div>
         </Link>
       </div>

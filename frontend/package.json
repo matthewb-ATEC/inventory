@@ -11,6 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.5.0",
     "@tanstack/react-table": "^8.20.5",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",
@@ -20,6 +21,7 @@
     "postcss": "^8.4.49",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^7.0.0",
     "yup": "^1.4.0"
   },

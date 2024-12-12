@@ -23,3 +23,20 @@ export interface StockType {
   project: ProjectType | null
   quantity: number
 }
+
+export type NotificationStatus =
+  | 'success'
+  | 'error'
+  | 'warn'
+  | 'ready'
+  | 'info'
+  | 'default'
+
+export interface NotificationType {
+  title?: string
+  message?: string | string[]
+  status?: NotificationStatus
+  symbol?: boolean
+  border?: boolean
+  closable?: boolean
+}

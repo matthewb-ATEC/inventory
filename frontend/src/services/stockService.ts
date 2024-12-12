@@ -34,12 +34,18 @@ const remove = async (id: number): Promise<StockType> => {
   return response.data
 }
 
+const removeAll = async (): Promise<StockType> => {
+  const response = await axios.delete<StockType>(baseURL)
+  return response.data
+}
+
 const stockService = {
   getAll,
   getMaterialStock,
   create,
   update,
   remove,
+  removeAll,
 }
 
 export default stockService

@@ -4,55 +4,37 @@ import { MaterialType, ProjectType, StockType } from '../../types'
 import materialsService from '../../services/materialsService'
 import { vendors } from '../../data'
 import stockService from '../../services/stockService'
-import Table from '../Table'
-import { createColumnHelper } from '@tanstack/react-table'
 import Button from '../Button'
-import { Text } from '../Text'
+import { Text, Title } from '../Text'
 
-const columnHelper = createColumnHelper<StockType>()
-
-const columns = [
-  {
-    header: 'Material',
-    columns: [
-      columnHelper.accessor('material.partDescription', {
-        header: () => 'Description',
-        cell: (info) => info.getValue(),
-      }),
-      columnHelper.accessor('material.size', {
-        header: () => 'Size',
-        cell: (info) => info.getValue(),
-      }),
-      columnHelper.accessor('material.color', {
-        header: () => 'Color',
-        cell: (info) => info.getValue(),
-      }),
-    ],
-  },
-  {
-    header: 'Stock',
-    columns: [
-      columnHelper.accessor('quantity', {
-        header: () => 'Quantity',
-        cell: (info) => info.renderValue(),
-      }),
-    ],
-  },
-]
+// Notifications
+import { useDispatch } from '../../hooks/hooks'
+import {
+  notifyWithTimeout,
+  showNotification,
+} from '../../reducers/notificationReducer'
+import { NotificationType } from '../../types'
 
 const CsvFileUpload = () => {
   const [file, setFile] = useState<File | null>(null)
   const [uploadedStocks, setUploadedStocks] = useState<StockType[]>([])
+
   const [existingMaterials, setExistingMaterials] = useState<MaterialType[]>([])
 
+  const dispatch = useDispatch()
+
   const getMaterials = async () => {
-    const materials = await materialsService.getAll()
-    setExistingMaterials(materials)
+    try {
+      const materials = await materialsService.getAll()
+      setExistingMaterials(materials)
+    } catch (error: unknown) {
+      console.log('Error getting materials from database', error)
+    }
   }
 
   useEffect(() => {
-    void getMaterials()
-  }, [])
+    if (file) void getMaterials()
+  }, [file])
 
   const increaseStock = async (material: MaterialType) => {
     try {
@@ -85,6 +67,15 @@ const CsvFileUpload = () => {
 
       await stockService.update(currentStock.id, newStock)
     } catch (error: unknown) {
+      const notification: NotificationType = {
+        title: 'Something went wrong',
+        message: `Failed to increase stock of ${material.partDescription}.`,
+        status: 'error',
+        closable: true,
+      }
+
+      dispatch(showNotification(notification))
+
       console.log(
         `Error increasing stock for material ${material.partNumber}: ${error}`
       )
@@ -122,38 +113,60 @@ const CsvFileUpload = () => {
   }
 
   const processShipment = async () => {
-    const stocksForIncrease = uploadedStocks.filter((stock) =>
-      existingMaterials.some(
-        (material) => material.partNumber === stock.material.partNumber
-      )
-    )
-
-    const newStocksForCatalog = uploadedStocks.filter(
-      (stock) =>
-        !existingMaterials.some(
+    try {
+      const stocksForIncrease = uploadedStocks.filter((stock) =>
+        existingMaterials.some(
           (material) => material.partNumber === stock.material.partNumber
         )
-    )
+      )
 
-    const processedStockIds = new Set<number>()
+      const newStocksForCatalog = uploadedStocks.filter(
+        (stock) =>
+          !existingMaterials.some(
+            (material) => material.partNumber === stock.material.partNumber
+          )
+      )
 
-    await Promise.all(
-      stocksForIncrease.map(async (stock) => {
-        await increaseStock(stock.material)
-        processedStockIds.add(stock.id)
-      })
-    )
+      const processedStockIds = new Set<number>()
 
-    await Promise.all(
-      newStocksForCatalog.map(async (stock) => {
-        await addMaterialToCatalog(stock.material)
-        processedStockIds.add(stock.id)
-      })
-    )
+      await Promise.all(
+        stocksForIncrease.map(async (stock) => {
+          await increaseStock(stock.material)
+          processedStockIds.add(stock.id)
+        })
+      )
 
-    setUploadedStocks((prev) =>
-      prev.filter((stock) => !processedStockIds.has(stock.id))
-    )
+      await Promise.all(
+        newStocksForCatalog.map(async (stock) => {
+          await addMaterialToCatalog(stock.material)
+          processedStockIds.add(stock.id)
+        })
+      )
+
+      setUploadedStocks((prev) =>
+        prev.filter((stock) => !processedStockIds.has(stock.id))
+      )
+
+      setFile(null)
+
+      const notification: NotificationType = {
+        title: 'Successfully uploaded shipment!',
+        status: 'success',
+      }
+
+      dispatch(notifyWithTimeout(notification))
+    } catch (error: unknown) {
+      const notification: NotificationType = {
+        title: 'Something went wrong',
+        message: 'Failed to upload shipment data to the database.',
+        status: 'error',
+        closable: true,
+      }
+
+      dispatch(showNotification(notification))
+
+      console.log('Error processing shipment', error)
+    }
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -279,7 +292,45 @@ const CsvFileUpload = () => {
 
         {uploadedStocks.length > 0 && (
           <div className="flex flex-col space-y-8">
-            <Table data={uploadedStocks} columns={columns} search={false} />
+            <table className="min-w-full table-auto border-collapse">
+              <thead>
+                <tr>
+                  <th className="text-start">
+                    <Title text="Description" />
+                  </th>
+                  <th className="text-start">
+                    <Title text="Size" />
+                  </th>
+                  <th className="text-start">
+                    <Title text="Color" />
+                  </th>
+                  <th className="text-start">
+                    <Title text="Quantity" />
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {uploadedStocks.map((stock, index) => (
+                  <tr
+                    className="border-b hover:bg-blue-50 text-start"
+                    key={index}
+                  >
+                    <td className="mr-4 pb-2 pt-4">
+                      <Text text={stock.material.partDescription} />
+                    </td>
+                    <td className="mx-4 pb-2 pt-4">
+                      <Text text={stock.material.size ?? ''} />
+                    </td>
+                    <td className="mx-4 pb-2 pt-4">
+                      <Text text={stock.material.color ?? ''} />
+                    </td>
+                    <td className="ml-4 pb-2 pt-4">
+                      <Text text={stock.quantity.toString()} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
             <Button
               text="Confirm Shipment"
               onClick={() => {
@@ -291,7 +342,15 @@ const CsvFileUpload = () => {
       </div>
     )
 
-  return <input type="file" accept=".csv" onChange={handleFileChange} />
+  return (
+    <div className="flex space-x-4 items-center">
+      <label className="text-gray-500 text-nowrap">
+        Upload Shipment (.csv)
+      </label>
+
+      <input type="file" accept=".csv" onChange={handleFileChange} />
+    </div>
+  )
 }
 
 export default CsvFileUpload

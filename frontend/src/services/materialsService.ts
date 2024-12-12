@@ -31,6 +31,11 @@ const remove = async (sku: string): Promise<MaterialType> => {
   return response.data
 }
 
-const materialsService = { getAll, getId, create, update, remove }
+const removeAll = async (): Promise<MaterialType> => {
+  const response = await axios.delete<MaterialType>(baseURL)
+  return response.data
+}
+
+const materialsService = { getAll, getId, create, update, remove, removeAll }
 
 export default materialsService

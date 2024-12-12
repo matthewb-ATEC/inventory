@@ -42,4 +42,13 @@ projectsRouter.delete('/:id', projectFinder, async (request, response) => {
   response.status(204).json({ message: 'project entry deleted successfully' })
 })
 
+projectsRouter.delete('/', async (request, response) => {
+  await Project.destroy({
+    where: {},
+    truncate: true,
+    cascade: true,
+  })
+  response.status(204).json({ message: 'All projects deleted successfully' })
+})
+
 export default projectsRouter

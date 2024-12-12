@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Shipments from './components/Shipments/Shipments'
 import Catalog from './components/Catalog/Catalog'
 import Inventory from './components/Inventory/Inventory'
+import Debug from './components/Debug'
 
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([
@@ -12,7 +13,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: '/', element: <Catalog /> },
+      { path: '/debug', element: <Debug /> },
       { path: '/catalog', element: <Catalog /> },
       { path: '/shipments', element: <Shipments /> },
       { path: '/inventory', element: <Inventory /> },

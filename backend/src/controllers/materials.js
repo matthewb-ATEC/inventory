@@ -46,4 +46,13 @@ materialsRouter.delete('/:id', materialFinder, async (request, response) => {
   response.status(204).json({ message: 'material entry deleted successfully' })
 })
 
+materialsRouter.delete('/', async (request, response) => {
+  await Material.destroy({
+    where: {},
+    truncate: true,
+    cascade: true,
+  })
+  response.status(204).json({ message: 'All materials deleted successfully' })
+})
+
 export default materialsRouter

@@ -26,11 +26,17 @@ const remove = async (id: number): Promise<ProjectType> => {
   return response.data
 }
 
+const removeAll = async (): Promise<ProjectType> => {
+  const response = await axios.delete<ProjectType>(baseURL)
+  return response.data
+}
+
 const projectsService = {
   getAll,
   create,
   update,
   remove,
+  removeAll,
 }
 
 export default projectsService
