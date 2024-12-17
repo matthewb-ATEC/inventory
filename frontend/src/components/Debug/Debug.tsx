@@ -1,9 +1,11 @@
 import Container from '../Container'
 import Button from '../Button'
 
+import { QueryClient } from '@tanstack/react-query'
 import materialsService from '../../services/materialsService'
 import stockService from '../../services/stockService'
 import projectsService from '../../services/projectsService'
+import vendorsService from '../../services/vendorsService'
 
 import MaterialTable from './MaterialTable'
 import StockTable from './StockTable'
@@ -11,11 +13,19 @@ import ProjectTable from './ProjectTable'
 import VendorTable from './VendorTable'
 
 const Debug = () => {
+  const queryClient = new QueryClient()
+
   const resetDatabase = async () => {
     try {
       await materialsService.removeAll()
       await stockService.removeAll()
       await projectsService.removeAll()
+      await vendorsService.removeAll()
+
+      queryClient.invalidateQueries({ queryKey: ['materials'] })
+      queryClient.invalidateQueries({ queryKey: ['stock'] })
+      queryClient.invalidateQueries({ queryKey: ['projects'] })
+      queryClient.invalidateQueries({ queryKey: ['vendors'] })
     } catch (error) {
       console.log(error)
     }

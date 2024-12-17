@@ -138,6 +138,7 @@ const StockTable = () => {
       (form.elements.namedItem('materialId') as HTMLInputElement).value,
       10
     )
+
     const quantity = parseInt(
       (form.elements.namedItem('quantity') as HTMLInputElement).value,
       10

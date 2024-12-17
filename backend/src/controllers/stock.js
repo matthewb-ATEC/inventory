@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { Material, Stock, Project, Vendor } from '../models/index.js'
+import { Material, Stock, Vendor } from '../models/index.js'
 const stockRouter = Router()
 
 const stockFinder = async (request, response, next) => {
@@ -89,22 +89,18 @@ stockRouter.get('/material/:partNumber', async (request, response) => {
 })
 
 stockRouter.post('/', async (request, response) => {
-  const { material, project, quantity } = request.body
+  const { materialId, quantity } = request.body
 
-  let projectInDb = await Project.findOne({
-    where: { number: project.number },
-  })
+  const materialExists = await Material.findByPk(materialId)
 
-  if (!projectInDb) {
-    projectInDb = await Project.create({
-      number: project.number,
-      name: project.name,
-    })
+  if (!materialExists) {
+    return response
+      .status(404)
+      .send({ error: `No matching material with id ${materialId}` })
   }
 
   const stock = await Stock.create({
-    materialId: material.id,
-    projectId: projectInDb.id,
+    materialId,
     quantity,
   })
 

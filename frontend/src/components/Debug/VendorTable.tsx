@@ -118,7 +118,7 @@ const VendorTable = () => {
   }
 
   if (isError) {
-    return <div>Error fetching Vendor data.</div>
+    return <div>Error fetching vendor data.</div>
   }
 
   return (
