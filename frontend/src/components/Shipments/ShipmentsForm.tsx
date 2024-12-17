@@ -11,15 +11,15 @@ const ShipmentsForm = () => {
   )
 
   return (
-    <form className="flex flex-col space-y-4 bg-white p-8 rounded-md shadow-md">
-      <div className="flex flex-col space-y-2">
+    <form className="flex flex-col gap-y-4 bg-white p-8 rounded-md shadow-md">
+      <div className="flex flex-col gap-y-2">
         <Title text="Shipments" />
         <Subtitle text="Track resource changes related to incoming or outgoing shipments" />
       </div>
-      <div className="flex flex-col space-y-2">
+      <div className="flex flex-col gap-y-2">
         <Header text="Tracking" />
 
-        <div className="flex items-center space-x-4 w-full">
+        <div className="flex items-center gap-x-4 w-full">
           <label className="text-gray-500 text-nowrap">Shipment Status</label>
           <select
             className="border-b-2 border-gray-300 w-full py-2 pr-2"
@@ -37,7 +37,7 @@ const ShipmentsForm = () => {
         </div>
 
         {shipmentStatus === shipmentStatuses[0] && (
-          <div className="flex items-center space-x-4 w-full">
+          <div className="flex items-center gap-x-4 w-full">
             <label className="text-gray-500 text-nowrap">Vendor</label>
             <select className="border-b-2 border-gray-300 w-full py-2 pr-2">
               {vendors.map((vendor, index) => (
@@ -50,7 +50,7 @@ const ShipmentsForm = () => {
         )}
 
         {shipmentStatus === shipmentStatuses[1] && (
-          <div className="flex items-center space-x-4 w-full">
+          <div className="flex items-center gap-x-4 w-full">
             <label className="text-gray-500 text-nowrap">
               Destination Site
             </label>
@@ -66,7 +66,7 @@ const ShipmentsForm = () => {
       </div>
 
       {shipmentStatus === shipmentStatuses[0] && (
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col gap-y-2">
           <Header text="Purchase Order" />
           <CsvFileUpload />
         </div>

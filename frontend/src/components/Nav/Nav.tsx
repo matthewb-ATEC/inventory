@@ -42,7 +42,7 @@ const Nav = () => {
       <div
         className={`${
           isMenuOpen ? 'block' : 'hidden'
-        } md:flex flex-col pb-2 md:pb-0 md:flex-row md:space-x-8 md:items-center text-white`}
+        } md:flex flex-col pb-2 md:pb-0 md:flex-row md:gap-x-8 md:items-center text-white`}
       >
         {sortedLinks.map((link, index) => (
           <NavTab key={index} name={link} />

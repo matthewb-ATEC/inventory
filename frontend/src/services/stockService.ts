@@ -1,7 +1,8 @@
 import axios from 'axios'
-import { MaterialType, StockType } from '../types'
+import { CreateStockType, StockType } from '../types/stock'
+import { MaterialType } from '../types/material'
 
-const baseURL = '/api/stocks'
+const baseURL = '/api/stock'
 
 const getAll = async (): Promise<StockType[]> => {
   const response = await axios.get<StockType[]>(baseURL)
@@ -19,7 +20,7 @@ const getMaterialStock = async (
   return response.data
 }
 
-const create = async (stock: StockType): Promise<StockType> => {
+const create = async (stock: CreateStockType): Promise<StockType> => {
   const response = await axios.post<StockType>(baseURL, stock)
   return response.data
 }

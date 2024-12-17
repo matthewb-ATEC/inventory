@@ -136,14 +136,14 @@ const Notification: React.FC = () => {
 
   return (
     <div
-      className={`flex space-x-4 justify-between p-4 ${
+      className={`flex gap-x-4 justify-between p-4 ${
         border
           ? `rounded-r-lg border-l-2 ${notificaionStyles[status].borderColor}`
           : 'rounded-lg'
       } ${notificaionStyles[status].backgroundColor}`}
     >
       <div
-        className={`flex space-x-4 ${notificaionStyles[status].backgroundColor}`}
+        className={`flex gap-x-4 ${notificaionStyles[status].backgroundColor}`}
       >
         {symbol && (
           <i
@@ -154,7 +154,7 @@ const Notification: React.FC = () => {
         )}
         <div
           className={`justify-self-start flex flex-wrap gap-x-4 ${
-            message && Array.isArray(message) ? 'flex-col space-y-2' : ''
+            message && Array.isArray(message) ? 'flex-col gap-y-2' : ''
           }`}
         >
           {title && (

@@ -52,7 +52,7 @@ const Table = <T extends object>({ data, columns, search }: TableProps<T>) => {
   })
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col gap-y-4">
       {/* Search Input */}
       {search !== false && (
         <div className="w-full justify-start">
@@ -89,7 +89,7 @@ const Table = <T extends object>({ data, columns, search }: TableProps<T>) => {
                         onClick={() => {
                           header.column.toggleSorting()
                         }}
-                        className="flex items-center space-x-2"
+                        className="flex items-center gap-x-2"
                       >
                         <span className="">
                           {flexRender(
@@ -161,7 +161,7 @@ const Table = <T extends object>({ data, columns, search }: TableProps<T>) => {
 
       {/* Pagination Controls */}
       {table.getRowCount() > pageSizes[0] && (
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col gap-y-2">
           <div className="grid lg:grid-cols-3">
             <span className="flex items-center justify-start gap-1">
               <div className="hidden lg:block">Page</div>
@@ -171,7 +171,7 @@ const Table = <T extends object>({ data, columns, search }: TableProps<T>) => {
               </strong>
             </span>
 
-            <div className="flex items-center justify-center space-x-2">
+            <div className="flex items-center justify-center gap-x-2">
               <button
                 className={`${
                   table.getCanPreviousPage() ? 'text-gray-500' : 'text-gray-300'

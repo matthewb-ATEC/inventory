@@ -1,18 +1,17 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
-class Project extends Model {}
+class Vendor extends Model {}
 
-Project.init(
+Vendor.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    number: { type: DataTypes.INTEGER, unique: true, allowNull: false },
     name: { type: DataTypes.STRING, allowNull: false },
   },
-  { sequelize, underscored: true, timestamps: true, modelName: 'project' },
+  { sequelize, underscored: true, timestamps: true, modelName: 'vendor' },
 )
 
-export default Project
+export default Vendor

@@ -2,7 +2,7 @@ import { createColumnHelper } from '@tanstack/react-table'
 import Table from '../Table'
 import { useEffect, useState } from 'react'
 import { ProjectType } from '../../types'
-import projectsService from '../../services/projectService'
+import projectsService from '../../services/projectsService'
 
 const columnHelper = createColumnHelper<ProjectType>()
 

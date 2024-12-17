@@ -30,7 +30,7 @@ const RemoveFromCatalogForm = () => {
 
   return (
     <Container>
-      <div className="flex flex-col space-y-2">
+      <div className="flex flex-col gap-y-2">
         <Title text="Remove from Catalog" />
         <Subtitle text="Remove legacy items from the catalog" />
       </div>
@@ -45,8 +45,8 @@ const RemoveFromCatalogForm = () => {
       >
         {({ errors, touched, values, isSubmitting, isValid }) => (
           <Form>
-            <div className="flex flex-col space-y-8 mt-4">
-              <div className="flex flex-col space-y-2">
+            <div className="flex flex-col gap-y-8 mt-4">
+              <div className="flex flex-col gap-y-2">
                 <Header text="Item Details" />
                 <div className="grid grid-cols-[1fr_2fr] items-center gap-y-2 gap-x-4">
                   {/* Item SKU Number */}

@@ -277,7 +277,7 @@ const CsvFileUpload = () => {
 
   if (file)
     return (
-      <div className="flex flex-col space-y-8">
+      <div className="flex flex-col gap-y-8">
         <div className="flex justify-between">
           <Text text={`File Name: ${file.name}`} />
           <button
@@ -291,7 +291,7 @@ const CsvFileUpload = () => {
         </div>
 
         {uploadedStocks.length > 0 && (
-          <div className="flex flex-col space-y-8">
+          <div className="flex flex-col gap-y-8">
             <table className="min-w-full table-auto border-collapse">
               <thead>
                 <tr>
@@ -343,7 +343,7 @@ const CsvFileUpload = () => {
     )
 
   return (
-    <div className="flex space-x-4 items-center">
+    <div className="flex gap-x-4 items-center">
       <label className="text-gray-500 text-nowrap">
         Upload Shipment (.csv)
       </label>

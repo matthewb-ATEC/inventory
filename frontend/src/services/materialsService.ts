@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { MaterialType } from '../types'
+import { MaterialType, CreateMaterialType } from '../types/material'
 
 const baseURL = '/api/materials'
 
@@ -13,7 +13,7 @@ const getId = async (id: string): Promise<MaterialType> => {
   return response.data
 }
 
-const create = async (material: MaterialType): Promise<MaterialType> => {
+const create = async (material: CreateMaterialType): Promise<MaterialType> => {
   const response = await axios.post<MaterialType>(baseURL, material)
   return response.data
 }

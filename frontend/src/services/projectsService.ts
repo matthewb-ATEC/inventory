@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ProjectType } from '../types'
+import { CreateProjectType, ProjectType } from '../types/project'
 
 const baseURL = '/api/projects'
 
@@ -8,8 +8,8 @@ const getAll = async (): Promise<ProjectType[]> => {
   return response.data
 }
 
-const create = async (stock: ProjectType): Promise<ProjectType> => {
-  const response = await axios.post<ProjectType>(baseURL, stock)
+const create = async (project: CreateProjectType): Promise<ProjectType> => {
+  const response = await axios.post<ProjectType>(baseURL, project)
   return response.data
 }
 

@@ -1,11 +1,18 @@
 import { Router } from 'express'
-import { Material } from '../models/index.js'
+import { Material, Vendor } from '../models/index.js'
 const materialsRouter = Router()
 
 const materialFinder = async (request, _response, next) => {
   const { id } = request.params
   const material = await Material.findByPk(id, {
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    attributes: { exclude: ['vendorId', 'createdAt', 'updatedAt'] },
+    include: [
+      {
+        model: Vendor,
+        as: 'vendor',
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+      },
+    ],
   })
   if (!material) {
     throw new NotFoundError(`Material with id ${id} not found`)
@@ -16,7 +23,14 @@ const materialFinder = async (request, _response, next) => {
 
 materialsRouter.get('/', async (_request, response) => {
   const material = await Material.findAll({
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    attributes: { exclude: ['vendorId', 'createdAt', 'updatedAt'] },
+    include: [
+      {
+        model: Vendor,
+        as: 'vendor',
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+      },
+    ],
   })
 
   response.status(200).send(material)
@@ -27,15 +41,34 @@ materialsRouter.get('/:id', materialFinder, async (request, response) => {
 })
 
 materialsRouter.post('/', async (request, response) => {
-  const { partNumber, partDescription, size, color, vendor, tag } = request.body
+  const {
+    partNumber,
+    description,
+    thickness,
+    width,
+    length,
+    color,
+    tag,
+    vendorId,
+  } = request.body
+
+  const vendorExists = await Vendor.findByPk(vendorId)
+
+  if (!vendorExists) {
+    return response
+      .status(404)
+      .send({ error: `No matching vendor with id ${vendorId}` })
+  }
 
   const material = await Material.create({
     partNumber,
-    partDescription,
-    size,
+    description,
+    thickness,
+    width,
+    length,
     color,
-    vendor,
     tag,
+    vendorId,
   })
 
   response.status(201).send(material)

@@ -7,37 +7,24 @@ Material.init(
   {
     id: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
       autoIncrement: true,
+      primaryKey: true,
     },
-    partNumber: {
-      type: DataTypes.STRING,
+    partNumber: { type: DataTypes.STRING, unique: true },
+    description: { type: DataTypes.STRING, allowNull: false },
+    thicknessInches: DataTypes.FLOAT,
+    widthInches: DataTypes.FLOAT,
+    lengthInches: DataTypes.FLOAT,
+    squareFeet: DataTypes.FLOAT,
+    color: DataTypes.STRING,
+    tag: DataTypes.STRING,
+    vendorId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
-    },
-    partDescription: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    size: {
-      type: DataTypes.STRING,
-    },
-    color: {
-      type: DataTypes.STRING,
-    },
-    vendor: {
-      type: DataTypes.STRING,
-    },
-    tag: {
-      type: DataTypes.STRING,
+      references: { model: 'vendors', key: 'id' },
     },
   },
-  {
-    sequelize,
-    underscored: true,
-    timestamps: true,
-    modelName: 'material',
-  },
+  { sequelize, underscored: true, timestamps: true, modelName: 'material' },
 )
 
 export default Material

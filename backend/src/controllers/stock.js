@@ -1,23 +1,29 @@
 import { Router } from 'express'
-import { Material, Stock, Project } from '../models/index.js'
-const stocksRouter = Router()
+import { Material, Stock, Project, Vendor } from '../models/index.js'
+const stockRouter = Router()
 
 const stockFinder = async (request, response, next) => {
   const { id } = request.params
   const stock = await Stock.findByPk(id, {
     attributes: {
-      exclude: ['materialId', 'projectId', 'createdAt', 'updatedAt'],
+      exclude: ['materialId', 'createdAt', 'updatedAt'],
     },
     include: [
       {
         model: Material,
         as: 'material',
-        exclude: ['createdAt', 'updatedAt'],
-      },
-      {
-        model: Project,
-        as: 'project',
-        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        attributes: {
+          exclude: ['vendorId', 'createdAt', 'updatedAt'],
+        },
+        include: [
+          {
+            model: Vendor,
+            as: 'vendor',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt'],
+            },
+          },
+        ],
       },
     ],
   })
@@ -28,21 +34,27 @@ const stockFinder = async (request, response, next) => {
   next()
 }
 
-stocksRouter.get('/', async (_request, response) => {
+stockRouter.get('/', async (_request, response) => {
   const stock = await Stock.findAll({
     attributes: {
-      exclude: ['materialId', 'projectId', 'createdAt', 'updatedAt'],
+      exclude: ['materialId', 'createdAt', 'updatedAt'],
     },
     include: [
       {
         model: Material,
         as: 'material',
-        exclude: ['createdAt', 'updatedAt'],
-      },
-      {
-        model: Project,
-        as: 'project',
-        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        attributes: {
+          exclude: ['vendorId', 'createdAt', 'updatedAt'],
+        },
+        include: [
+          {
+            model: Vendor,
+            as: 'vendor',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt'],
+            },
+          },
+        ],
       },
     ],
   })
@@ -50,28 +62,18 @@ stocksRouter.get('/', async (_request, response) => {
   response.status(200).send(stock)
 })
 
-stocksRouter.get('/material/:partNumber', async (request, response) => {
+stockRouter.get('/material/:partNumber', async (request, response) => {
   const { partNumber } = request.params
-
-  const whereProject = request.query.projectNumber
-    ? { projectNumber: request.query.projectNumber }
-    : {}
 
   const stock = await Stock.findOne({
     attributes: {
-      exclude: ['materialId', 'projectId', 'createdAt', 'updatedAt'],
+      exclude: ['materialId', 'createdAt', 'updatedAt'],
     },
     include: [
       {
         model: Material,
         as: 'material',
         where: { partNumber },
-        attributes: { exclude: ['createdAt', 'updatedAt'] },
-      },
-      {
-        model: Project,
-        as: 'project',
-        where: whereProject,
         attributes: { exclude: ['createdAt', 'updatedAt'] },
       },
     ],
@@ -86,7 +88,7 @@ stocksRouter.get('/material/:partNumber', async (request, response) => {
   response.status(200).send(stock)
 })
 
-stocksRouter.post('/', async (request, response) => {
+stockRouter.post('/', async (request, response) => {
   const { material, project, quantity } = request.body
 
   let projectInDb = await Project.findOne({
@@ -109,7 +111,7 @@ stocksRouter.post('/', async (request, response) => {
   response.status(201).send(stock)
 })
 
-stocksRouter.put('/:id', stockFinder, async (request, response) => {
+stockRouter.put('/:id', stockFinder, async (request, response) => {
   const { quantity, material, project } = request.body
 
   if (!material || !material.id) {
@@ -126,13 +128,13 @@ stocksRouter.put('/:id', stockFinder, async (request, response) => {
   response.status(201).send(request.stock)
 })
 
-stocksRouter.delete('/', async (request, response) => {
+stockRouter.delete('/', async (request, response) => {
   await Stock.destroy({
     where: {},
     truncate: true,
     cascade: true,
   })
-  response.status(204).json({ message: 'All stocks deleted successfully' })
+  response.status(204).json({ message: 'All stock deleted successfully' })
 })
 
-export default stocksRouter
+export default stockRouter

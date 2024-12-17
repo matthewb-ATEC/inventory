@@ -7,8 +7,9 @@ import { error as _error } from './util/logger.js'
 import 'express-async-errors'
 
 import materialsRouter from './controllers/materials.js'
-import stocksRouter from './controllers/stocks.js'
+import stockRouter from './controllers/stock.js'
 import projectsRouter from './controllers/projects.js'
+import vendorsRouter from './controllers/vendors.js'
 
 app.use(cors())
 app.use(express.static('dist'))
@@ -20,8 +21,9 @@ app.get('/api/health', (req, res) => {
 })
 
 app.use('/api/materials', materialsRouter)
-app.use('/api/stocks', stocksRouter)
+app.use('/api/stock', stockRouter)
 app.use('/api/projects', projectsRouter)
+app.use('/api/vendors', vendorsRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

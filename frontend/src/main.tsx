@@ -9,6 +9,11 @@ import './index.css'
 import { Provider } from 'react-redux'
 import store from './store'
 
+// Provides React Query hooks like useQuery and useMutation
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
+
 const rootElement = document.getElementById('root')
 if (!rootElement) {
   throw new Error(
@@ -18,6 +23,8 @@ if (!rootElement) {
 
 ReactDOM.createRoot(rootElement).render(
   <Provider store={store}>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   </Provider>
 )

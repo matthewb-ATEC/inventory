@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Shipments from './components/Shipments/Shipments'
 import Catalog from './components/Catalog/Catalog'
 import Inventory from './components/Inventory/Inventory'
-import Debug from './components/Debug'
+import Debug from './components/Debug/Debug'
 
 // Define routes using createBrowserRouter
 const router = createBrowserRouter([
