@@ -13,6 +13,8 @@ import ProjectTable from './ProjectTable'
 import VendorTable from './VendorTable'
 import CrateTable from './CrateTable'
 import LocationTable from './LocationTable'
+import cratesService from '../../services/cratesService'
+import locationsService from '../../services/locationsService'
 
 const Debug = () => {
   const queryClient = new QueryClient()
@@ -23,6 +25,8 @@ const Debug = () => {
       await stockService.removeAll()
       await projectsService.removeAll()
       await vendorsService.removeAll()
+      await cratesService.removeAll()
+      await locationsService.removeAll()
 
       queryClient.invalidateQueries({ queryKey: ['materials'] })
       queryClient.invalidateQueries({ queryKey: ['stock'] })
