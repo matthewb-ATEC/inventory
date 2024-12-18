@@ -9,7 +9,7 @@ Crate.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    crateNumber: {
+    number: {
       type: DataTypes.STRING,
       unique: true,
     },
@@ -22,11 +22,6 @@ Crate.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: 'projects', key: 'id' },
-    },
-    vendorId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: { model: 'vendors', key: 'id' },
     },
   },
   { sequelize, underscored: true, timestamps: true, modelName: 'crate' },

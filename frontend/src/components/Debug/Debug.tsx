@@ -11,6 +11,8 @@ import MaterialTable from './MaterialTable'
 import StockTable from './StockTable'
 import ProjectTable from './ProjectTable'
 import VendorTable from './VendorTable'
+import CrateTable from './CrateTable'
+import LocationTable from './LocationTable'
 
 const Debug = () => {
   const queryClient = new QueryClient()
@@ -26,6 +28,8 @@ const Debug = () => {
       queryClient.invalidateQueries({ queryKey: ['stock'] })
       queryClient.invalidateQueries({ queryKey: ['projects'] })
       queryClient.invalidateQueries({ queryKey: ['vendors'] })
+      queryClient.invalidateQueries({ queryKey: ['crates'] })
+      queryClient.invalidateQueries({ queryKey: ['locations'] })
     } catch (error) {
       console.log(error)
     }
@@ -56,6 +60,14 @@ const Debug = () => {
 
       <Container>
         <VendorTable />
+      </Container>
+
+      <Container>
+        <LocationTable />
+      </Container>
+
+      <Container>
+        <CrateTable />
       </Container>
     </div>
   )

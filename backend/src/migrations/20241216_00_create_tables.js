@@ -229,7 +229,7 @@ export const up = async ({ context: queryInterface }) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    crate_number: {
+    number: {
       type: DataTypes.STRING,
       unique: true,
     },
@@ -246,14 +246,6 @@ export const up = async ({ context: queryInterface }) => {
       allowNull: false,
       references: {
         model: 'projects',
-        key: 'id',
-      },
-    },
-    vendor_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'vendors',
         key: 'id',
       },
     },

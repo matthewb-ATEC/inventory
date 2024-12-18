@@ -27,10 +27,6 @@ const defineRelationships = () => {
   Crate.belongsTo(Project, { foreignKey: 'projectId', as: 'project' })
   Project.hasMany(Crate, { foreignKey: 'projectId', as: 'crates' })
 
-  // Crate to Vendor relationship
-  Crate.belongsTo(Vendor, { foreignKey: 'vendorId', as: 'vendor' })
-  Vendor.hasMany(Crate, { foreignKey: 'vendorId', as: 'crates' })
-
   // CrateStock to Crate relationship
   CrateStock.belongsTo(Crate, { foreignKey: 'crateId', as: 'crate' })
   Crate.hasMany(CrateStock, { foreignKey: 'crateId', as: 'crateStocks' })
