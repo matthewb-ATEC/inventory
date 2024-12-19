@@ -184,7 +184,6 @@ export const up = async ({ context: queryInterface }) => {
     },
     origin: DataTypes.INTEGER,
     destination: DataTypes.INTEGER,
-    comment: DataTypes.STRING,
     created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
@@ -291,7 +290,7 @@ export const up = async ({ context: queryInterface }) => {
     },
   })
 
-  await queryInterface.createTable('shipment_stock', {
+  await queryInterface.createTable('shipment_crate', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -305,11 +304,11 @@ export const up = async ({ context: queryInterface }) => {
         key: 'id',
       },
     },
-    stock_id: {
+    crate_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'stock',
+        model: 'crates',
         key: 'id',
       },
     },

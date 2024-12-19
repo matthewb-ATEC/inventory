@@ -1,32 +1,25 @@
 import { Router } from 'express'
 import { Material, Stock, Vendor } from '../models/index.js'
+import { materialFindOptions } from './materials.js'
 const stockRouter = Router()
+
+export const stockFindOptions = {
+  attributes: {
+    exclude: ['materialId', 'createdAt', 'updatedAt'],
+  },
+  include: [
+    {
+      model: Material,
+      as: 'material',
+      ...materialFindOptions,
+    },
+  ],
+}
 
 const stockFinder = async (request, response, next) => {
   const { id } = request.params
-  const stock = await Stock.findByPk(id, {
-    attributes: {
-      exclude: ['materialId', 'createdAt', 'updatedAt'],
-    },
-    include: [
-      {
-        model: Material,
-        as: 'material',
-        attributes: {
-          exclude: ['vendorId', 'createdAt', 'updatedAt'],
-        },
-        include: [
-          {
-            model: Vendor,
-            as: 'vendor',
-            attributes: {
-              exclude: ['createdAt', 'updatedAt'],
-            },
-          },
-        ],
-      },
-    ],
-  })
+  const stock = await Stock.findByPk(id, stockFindOptions)
+
   if (!stock) {
     return response.status(404).json({ error: 'Stock not found' })
   }
@@ -35,29 +28,7 @@ const stockFinder = async (request, response, next) => {
 }
 
 stockRouter.get('/', async (_request, response) => {
-  const stock = await Stock.findAll({
-    attributes: {
-      exclude: ['materialId', 'createdAt', 'updatedAt'],
-    },
-    include: [
-      {
-        model: Material,
-        as: 'material',
-        attributes: {
-          exclude: ['vendorId', 'createdAt', 'updatedAt'],
-        },
-        include: [
-          {
-            model: Vendor,
-            as: 'vendor',
-            attributes: {
-              exclude: ['createdAt', 'updatedAt'],
-            },
-          },
-        ],
-      },
-    ],
-  })
+  const stock = await Stock.findAll(stockFindOptions)
 
   response.status(200).send(stock)
 })

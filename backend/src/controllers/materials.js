@@ -1,19 +1,23 @@
 import { Router } from 'express'
 import { Material, Vendor } from '../models/index.js'
+import { vendorFindOptions } from './vendors.js'
 const materialsRouter = Router()
+
+export const materialFindOptions = {
+  attributes: { exclude: ['vendorId', 'createdAt', 'updatedAt'] },
+  include: [
+    {
+      model: Vendor,
+      as: 'vendor',
+      ...vendorFindOptions,
+    },
+  ],
+}
 
 const materialFinder = async (request, _response, next) => {
   const { id } = request.params
-  const material = await Material.findByPk(id, {
-    attributes: { exclude: ['vendorId', 'createdAt', 'updatedAt'] },
-    include: [
-      {
-        model: Vendor,
-        as: 'vendor',
-        attributes: { exclude: ['createdAt', 'updatedAt'] },
-      },
-    ],
-  })
+  const material = await Material.findByPk(id, materialFindOptions)
+
   if (!material) {
     throw new NotFoundError(`Material with id ${id} not found`)
   }
@@ -22,16 +26,7 @@ const materialFinder = async (request, _response, next) => {
 }
 
 materialsRouter.get('/', async (_request, response) => {
-  const material = await Material.findAll({
-    attributes: { exclude: ['vendorId', 'createdAt', 'updatedAt'] },
-    include: [
-      {
-        model: Vendor,
-        as: 'vendor',
-        attributes: { exclude: ['createdAt', 'updatedAt'] },
-      },
-    ],
-  })
+  const material = await Material.findAll(materialFindOptions)
 
   response.status(200).send(material)
 })

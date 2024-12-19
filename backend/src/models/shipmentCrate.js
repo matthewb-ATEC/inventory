@@ -1,8 +1,8 @@
 import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../util/db.js'
-class ShipmentStock extends Model {}
+class ShipmentCrate extends Model {}
 
-ShipmentStock.init(
+ShipmentCrate.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -14,18 +14,18 @@ ShipmentStock.init(
       allowNull: false,
       references: { model: 'shipments', key: 'id' },
     },
-    stockId: {
+    crateId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: 'stock', key: 'id' },
+      references: { model: 'crate', key: 'id' },
     },
   },
   {
     sequelize,
     underscored: true,
     timestamps: true,
-    modelName: 'shipmentStock',
+    modelName: 'shipmentCrate',
   },
 )
 
-export default ShipmentStock
+export default ShipmentCrate

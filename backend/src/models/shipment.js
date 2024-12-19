@@ -10,18 +10,11 @@ Shipment.init(
       primaryKey: true,
     },
     status: {
-      type: DataTypes.ENUM(
-        'Inbound',
-        'Outbound',
-        'Returning',
-        'In Transit',
-        'Received',
-      ),
+      type: DataTypes.ENUM('Received', 'In Transit', 'Returning'),
       allowNull: false,
     },
     origin: DataTypes.INTEGER,
     destination: DataTypes.INTEGER,
-    comment: DataTypes.STRING,
   },
   { sequelize, underscored: true, timestamps: true, modelName: 'shipment' },
 )

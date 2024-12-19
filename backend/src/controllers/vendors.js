@@ -2,11 +2,14 @@ import { Router } from 'express'
 import { Vendor } from '../models/index.js'
 const vendorsRouter = Router()
 
+export const vendorFindOptions = {
+  attributes: { exclude: ['createdAt', 'updatedAt'] },
+}
+
 const vendorFinder = async (request, _response, next) => {
   const { id } = request.params
-  const vendor = await Vendor.findByPk(id, {
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
-  })
+  const vendor = await Vendor.findByPk(id, vendorFindOptions)
+
   if (!vendor) {
     throw new NotFoundError(`Vendor with id ${id} not found`)
   }
@@ -15,9 +18,7 @@ const vendorFinder = async (request, _response, next) => {
 }
 
 vendorsRouter.get('/', async (_request, response) => {
-  const vendor = await Vendor.findAll({
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
-  })
+  const vendor = await Vendor.findAll(vendorFindOptions)
 
   response.status(200).send(vendor)
 })

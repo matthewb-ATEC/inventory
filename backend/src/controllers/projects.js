@@ -2,11 +2,14 @@ import { Router } from 'express'
 import { Project } from '../models/index.js'
 const projectsRouter = Router()
 
+export const projectFindOptions = {
+  attributes: { exclude: ['createdAt', 'updatedAt'] },
+}
+
 const projectFinder = async (request, _response, next) => {
   const { id } = request.params
-  const project = await Project.findByPk(id, {
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
-  })
+  const project = await Project.findByPk(id, projectFindOptions)
+
   if (!project) {
     throw new NotFoundError(`Project with id ${id} not found`)
   }
@@ -15,9 +18,7 @@ const projectFinder = async (request, _response, next) => {
 }
 
 projectsRouter.get('/', async (_request, response) => {
-  const project = await Project.findAll({
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
-  })
+  const project = await Project.findAll(projectFindOptions)
 
   response.status(200).send(project)
 })

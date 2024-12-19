@@ -25,6 +25,7 @@ CrateStock.init(
     underscored: true,
     timestamps: true,
     modelName: 'crateStock',
+    tableName: 'crate_stock',
   },
 )
 

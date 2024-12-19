@@ -1,28 +1,31 @@
 import { Router } from 'express'
 import { Crate, Location, Project } from '../models/index.js'
+import { projectFindOptions } from './projects.js'
+import { locationFindOptions } from './locations.js'
 const cratesRouter = Router()
+
+export const crateFindOptions = {
+  attributes: {
+    exclude: ['locationId', 'projectId', 'createdAt', 'updatedAt'],
+  },
+  include: [
+    {
+      model: Location,
+      as: 'location',
+      ...locationFindOptions,
+    },
+    {
+      model: Project,
+      as: 'project',
+      ...projectFindOptions,
+    },
+  ],
+}
 
 const crateFinder = async (request, _response, next) => {
   const { id } = request.params
-  const crate = await Crate.findByPk(id, {
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
-    include: [
-      {
-        model: Location,
-        as: 'location',
-        attributes: {
-          exclude: ['createdAt', 'updatedAt'],
-        },
-      },
-      {
-        model: Project,
-        as: 'project',
-        attributes: {
-          exclude: ['createdAt', 'updatedAt'],
-        },
-      },
-    ],
-  })
+  const crate = await Crate.findByPk(id, crateFindOptions)
+
   if (!crate) {
     throw new NotFoundError(`Crate with id ${id} not found`)
   }
@@ -31,25 +34,7 @@ const crateFinder = async (request, _response, next) => {
 }
 
 cratesRouter.get('/', async (_request, response) => {
-  const crate = await Crate.findAll({
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
-    include: [
-      {
-        model: Location,
-        as: 'location',
-        attributes: {
-          exclude: ['createdAt', 'updatedAt'],
-        },
-      },
-      {
-        model: Project,
-        as: 'project',
-        attributes: {
-          exclude: ['createdAt', 'updatedAt'],
-        },
-      },
-    ],
-  })
+  const crate = await Crate.findAll(crateFindOptions)
 
   response.status(200).send(crate)
 })

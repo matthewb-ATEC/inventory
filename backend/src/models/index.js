@@ -6,7 +6,7 @@ import Location from './location.js'
 import Crate from './crate.js'
 import CrateStock from './crateStock.js'
 import Shipment from './shipment.js'
-import ShipmentStock from './shipmentStock.js'
+import ShipmentCrate from './shipmentCrate.js'
 import Request from './request.js'
 import RequestStock from './requestStock.js'
 
@@ -35,19 +35,19 @@ const defineRelationships = () => {
   CrateStock.belongsTo(Stock, { foreignKey: 'stockId', as: 'stock' })
   Stock.hasMany(CrateStock, { foreignKey: 'stockId', as: 'crateStocks' })
 
-  // ShipmentStock to Shipment relationship
-  ShipmentStock.belongsTo(Shipment, {
+  // ShipmentCrate to Shipment relationship
+  ShipmentCrate.belongsTo(Shipment, {
     foreignKey: 'shipmentId',
     as: 'shipment',
   })
-  Shipment.hasMany(ShipmentStock, {
+  Shipment.hasMany(ShipmentCrate, {
     foreignKey: 'shipmentId',
-    as: 'shipmentStocks',
+    as: 'shipmentCrates',
   })
 
-  // ShipmentStock to Stock relationship
-  ShipmentStock.belongsTo(Stock, { foreignKey: 'stockId', as: 'stock' })
-  Stock.hasMany(ShipmentStock, { foreignKey: 'stockId', as: 'shipmentStocks' })
+  // ShipmentCrate to Crate relationship
+  ShipmentCrate.belongsTo(Crate, { foreignKey: 'crateId', as: 'crate' })
+  Crate.hasMany(ShipmentCrate, { foreignKey: 'crateId', as: 'shipmentCrates' })
 
   // RequestStock to Request relationship
   RequestStock.belongsTo(Request, { foreignKey: 'requestId', as: 'request' })
@@ -72,7 +72,7 @@ export {
   Crate,
   CrateStock,
   Shipment,
-  ShipmentStock,
+  ShipmentCrate,
   Request,
   RequestStock,
 }
