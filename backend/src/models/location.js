@@ -9,11 +9,30 @@ Location.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    aisle: DataTypes.INTEGER,
-    col: DataTypes.CHAR,
-    shelf: DataTypes.INTEGER,
+    aisle: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    col: {
+      type: DataTypes.CHAR,
+      allowNull: false,
+      validate: {
+        isAlpha: true,
+      },
+    },
+    shelf: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   { sequelize, underscored: true, timestamps: true, modelName: 'location' },
 )
+
+// Add a hook to capitalize all letters
+Location.addHook('beforeSave', (instance) => {
+  if (instance.col) {
+    instance.col = instance.col.toUpperCase() // Capitalize all letters
+  }
+})
 
 export default Location

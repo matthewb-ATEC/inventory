@@ -19,13 +19,25 @@ export const up = async ({ context: queryInterface }) => {
     'DROP TABLE IF EXISTS "materials" CASCADE;',
   )
 
-  // Create shipment_status ENUM for PostgreSQL
+  // Create ENUMs for PostgreSQL
+  await queryInterface.sequelize.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'shipment_type') THEN
+          CREATE TYPE shipment_type AS ENUM (
+            'Vendor to Warehouse', 'Warehouse to Project'
+          );
+        END IF;
+      END
+      $$;
+    `)
+
   await queryInterface.sequelize.query(`
       DO $$
       BEGIN
         IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'shipment_status') THEN
           CREATE TYPE shipment_status AS ENUM (
-            'Inbound', 'Outbound', 'Returning', 'In Transit', 'Received'
+            'Received', 'Shipped'
           );
         END IF;
       END
@@ -178,12 +190,26 @@ export const up = async ({ context: queryInterface }) => {
       autoIncrement: true,
       primaryKey: true,
     },
+    type: {
+      type: 'shipment_type',
+    },
     status: {
       type: 'shipment_status',
-      allowNull: false,
     },
-    origin: DataTypes.INTEGER,
-    destination: DataTypes.INTEGER,
+    project_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'projects',
+        key: 'id',
+      },
+    },
+    vendor_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'vendors',
+        key: 'id',
+      },
+    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
@@ -378,20 +404,26 @@ export const up = async ({ context: queryInterface }) => {
 }
 
 export const down = async ({ context: queryInterface }) => {
+  // Drop triggers
   await queryInterface.sequelize.query(
     'DROP TRIGGER IF EXISTS set_square_feet ON materials',
   )
 
   // Drop tables in reverse order of dependencies
-  await queryInterface.dropTable('request_stock')
-  await queryInterface.dropTable('shipment_stock')
   await queryInterface.dropTable('crate_stock')
+  await queryInterface.dropTable('shipment_crate')
   await queryInterface.dropTable('crates')
   await queryInterface.dropTable('stock')
   await queryInterface.dropTable('shipments')
   await queryInterface.dropTable('requests')
   await queryInterface.dropTable('projects')
   await queryInterface.dropTable('materials')
-  await queryInterface.dropTable('vendors')
   await queryInterface.dropTable('locations')
+  await queryInterface.dropTable('vendors')
+
+  // Drop enums if needed
+  await queryInterface.sequelize.query('DROP TYPE IF EXISTS shipment_type;')
+  await queryInterface.sequelize.query('DROP TYPE IF EXISTS shipment_status;')
+
+  // Drop vendors table last
 }

@@ -112,7 +112,7 @@ const LocationTable = () => {
       10
     )
 
-    const col = (form.elements.namedItem('col') as HTMLInputElement).value
+    const col = (form.elements.namedItem('column') as HTMLInputElement).value
 
     const shelf = parseInt(
       (form.elements.namedItem('shelf') as HTMLInputElement).value,
@@ -155,8 +155,8 @@ const LocationTable = () => {
           <input
             className="p-2 border-b-2 border-gray-300"
             type="text"
-            placeholder="col"
-            name="col"
+            placeholder="column"
+            name="column"
           />
           <input
             className="p-2 border-b-2 border-gray-300"

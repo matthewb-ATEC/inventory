@@ -91,11 +91,11 @@ const CrateTable = () => {
       dispatch(
         notifyWithTimeout({
           title: 'Error',
-          message: 'Failed to create new Crate',
+          message: 'Failed to create new crate',
           status: 'error',
         })
       )
-      console.error('Error creating Crate:', error)
+      console.error('Error creating crate:', error)
     },
   })
 

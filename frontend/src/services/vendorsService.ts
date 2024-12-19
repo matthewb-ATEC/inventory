@@ -13,11 +13,8 @@ const create = async (stock: CreateVendorType): Promise<VendorType> => {
   return response.data
 }
 
-const update = async (
-  id: number,
-  newVendor: VendorType
-): Promise<VendorType> => {
-  const response = await axios.put<VendorType>(`${baseURL}/${id}`, newVendor)
+const update = async (id: number, vendor: VendorType): Promise<VendorType> => {
+  const response = await axios.put<VendorType>(`${baseURL}/${id}`, vendor)
   return response.data
 }
 

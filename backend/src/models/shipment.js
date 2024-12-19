@@ -9,14 +9,31 @@ Shipment.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    status: {
-      type: DataTypes.ENUM('Received', 'In Transit', 'Returning'),
+    type: {
+      type: DataTypes.ENUM('Vendor to Warehouse', 'Warehouse to Project'),
       allowNull: false,
     },
-    origin: DataTypes.INTEGER,
-    destination: DataTypes.INTEGER,
+    status: {
+      type: DataTypes.ENUM('Received', 'Shipped'),
+      allowNull: false,
+    },
+    projectId: {
+      type: DataTypes.INTEGER,
+      references: { model: 'projects', key: 'id' },
+      allowNull: false,
+    },
+    vendorId: {
+      type: DataTypes.INTEGER,
+      references: { model: 'vendors', key: 'id' },
+      allowNull: false,
+    },
   },
-  { sequelize, underscored: true, timestamps: true, modelName: 'shipment' },
+  {
+    sequelize,
+    underscored: true,
+    timestamps: true,
+    modelName: 'shipment',
+  },
 )
 
 export default Shipment
