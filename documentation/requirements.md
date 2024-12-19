@@ -214,6 +214,18 @@ The web application is publically accessible on the internet and not protected b
 
 The application will not support QR code or Barcodes to identify any data.
 
+#### Return Shipments
+
+The application will not support shipments back to the original sender.
+
+#### Shipments to Subcontractors
+
+The application will not support shipments to intermediary subcontractors.
+
+#### Comments
+
+The application will not support posting and tracking comments associated with shipments or other actions.
+
 ### Assumptions and dependencies
 
 #### User Hardware

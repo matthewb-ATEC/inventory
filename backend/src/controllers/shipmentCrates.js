@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { ShipmentCrate, Crate, Shipment } from '../models/index.js'
 import { crateFindOptions } from './crates.js'
 import { shipmentFindOptions } from './shipments.js'
-const shipmentCrateRouter = Router()
+const shipmentCratesRouter = Router()
 
 const shipmentCrateFindOptions = {
   attributes: { exclude: ['shipmentId', 'crateId', 'createdAt', 'updatedAt'] },
@@ -34,13 +34,13 @@ const shipmentCrateFinder = async (request, _response, next) => {
   next()
 }
 
-shipmentCrateRouter.get('/', async (_request, response) => {
+shipmentCratesRouter.get('/', async (_request, response) => {
   const crate = await ShipmentCrate.findAll(shipmentCrateFindOptions)
 
   response.status(200).send(crate)
 })
 
-shipmentCrateRouter.get(
+shipmentCratesRouter.get(
   '/:id',
   shipmentCrateFinder,
   async (request, response) => {
@@ -48,7 +48,7 @@ shipmentCrateRouter.get(
   },
 )
 
-shipmentCrateRouter.post('/', async (request, response) => {
+shipmentCratesRouter.post('/', async (request, response) => {
   const { crateId, shipmentId } = request.body
 
   const crateExists = await Crate.findByPk(crateId)
@@ -75,7 +75,7 @@ shipmentCrateRouter.post('/', async (request, response) => {
   response.status(201).send(shipmentCrate)
 })
 
-shipmentCrateRouter.delete(
+shipmentCratesRouter.delete(
   '/:id',
   shipmentCrateFinder,
   async (request, response) => {
@@ -86,7 +86,7 @@ shipmentCrateRouter.delete(
   },
 )
 
-shipmentCrateRouter.delete('/', async (request, response) => {
+shipmentCratesRouter.delete('/', async (request, response) => {
   await ShipmentCrate.destroy({
     where: {},
     truncate: true,
@@ -97,4 +97,4 @@ shipmentCrateRouter.delete('/', async (request, response) => {
     .json({ message: 'All shipment crates deleted successfully' })
 })
 
-export default shipmentCrateRouter
+export default shipmentCratesRouter
