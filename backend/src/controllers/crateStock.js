@@ -19,6 +19,7 @@ const crateStockFindOptions = {
     },
   ],
 }
+
 const crateStockFinder = async (request, _response, next) => {
   const { id } = request.params
   const crateStock = await CrateStock.findByPk(id, crateStockFindOptions)

@@ -316,7 +316,7 @@ export const up = async ({ context: queryInterface }) => {
     },
   })
 
-  await queryInterface.createTable('shipment_crate', {
+  await queryInterface.createTable('shipment_crates', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -410,20 +410,22 @@ export const down = async ({ context: queryInterface }) => {
   )
 
   // Drop tables in reverse order of dependencies
-  await queryInterface.dropTable('crate_stock')
-  await queryInterface.dropTable('shipment_crate')
-  await queryInterface.dropTable('crates')
-  await queryInterface.dropTable('stock')
-  await queryInterface.dropTable('shipments')
-  await queryInterface.dropTable('requests')
-  await queryInterface.dropTable('projects')
-  await queryInterface.dropTable('materials')
-  await queryInterface.dropTable('locations')
-  await queryInterface.dropTable('vendors')
+  await queryInterface.dropTable('shipment_crates', { cascade: true })
+  await queryInterface.dropTable('crate_stock', { cascade: true })
+  await queryInterface.dropTable('crates', { cascade: true })
+  await queryInterface.dropTable('stock', { cascade: true })
+  await queryInterface.dropTable('shipments', { cascade: true })
+  await queryInterface.dropTable('requests', { cascade: true })
+  await queryInterface.dropTable('projects', { cascade: true })
+  await queryInterface.dropTable('materials', { cascade: true })
+  await queryInterface.dropTable('vendors', { cascade: true })
+  await queryInterface.dropTable('locations', { cascade: true })
 
   // Drop enums if needed
-  await queryInterface.sequelize.query('DROP TYPE IF EXISTS shipment_type;')
-  await queryInterface.sequelize.query('DROP TYPE IF EXISTS shipment_status;')
-
-  // Drop vendors table last
+  await queryInterface.sequelize.query(
+    'DROP TYPE IF EXISTS shipment_type CASCADE;',
+  )
+  await queryInterface.sequelize.query(
+    'DROP TYPE IF EXISTS shipment_status CASCADE;',
+  )
 }

@@ -17,6 +17,7 @@ import cratesService from '../../services/cratesService'
 import locationsService from '../../services/locationsService'
 import CrateStockTable from './CrateStockTable'
 import ShipmentTable from './ShipmentTable'
+import ShipmentCrateTable from './ShipmentCratesTable'
 
 const Debug = () => {
   const queryClient = new QueryClient()
@@ -82,6 +83,10 @@ const Debug = () => {
 
       <Container>
         <ShipmentTable />
+      </Container>
+
+      <Container>
+        <ShipmentCrateTable />
       </Container>
     </div>
   )

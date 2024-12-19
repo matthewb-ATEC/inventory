@@ -14,6 +14,7 @@ import cratesRouter from './controllers/crates.js'
 import locationsRouter from './controllers/locations.js'
 import crateStockRouter from './controllers/crateStock.js'
 import shipmentsRouter from './controllers/shipments.js'
+import shipmentCrateRouter from './controllers/shipmentCrate.js'
 
 app.use(cors())
 app.use(express.static('dist'))
@@ -32,6 +33,7 @@ app.use('/api/crates', cratesRouter)
 app.use('/api/locations', locationsRouter)
 app.use('/api/crateStock', crateStockRouter)
 app.use('/api/shipments', shipmentsRouter)
+app.use('/api/shipmentCrates', shipmentCrateRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
