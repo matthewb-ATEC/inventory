@@ -19,6 +19,7 @@ import CrateStockTable from './CrateStockTable'
 import ShipmentTable from './ShipmentTable'
 import ShipmentCrateTable from './ShipmentCratesTable'
 import RequestTable from './RequestTable'
+import RequestStockTable from './RequestStockTable'
 
 const Debug = () => {
   const queryClient = new QueryClient()
@@ -92,6 +93,10 @@ const Debug = () => {
 
       <Container>
         <RequestTable />
+      </Container>
+
+      <Container>
+        <RequestStockTable />
       </Container>
     </div>
   )

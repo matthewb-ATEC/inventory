@@ -20,7 +20,13 @@ RequestStock.init(
       references: { model: 'stock', key: 'id' },
     },
   },
-  { sequelize, underscored: true, timestamps: true, modelName: 'requestStock' },
+  {
+    sequelize,
+    underscored: true,
+    timestamps: true,
+    modelName: 'requestStock',
+    tableName: 'request_stock',
+  },
 )
 
 export default RequestStock
